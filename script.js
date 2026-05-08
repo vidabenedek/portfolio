@@ -1,8 +1,10 @@
 const body = document.body;
 const panels = document.querySelectorAll(".panel");
+const siteHeader = document.querySelector(".site-header");
 const navLinks = document.querySelectorAll(".site-nav a");
 const sections = document.querySelectorAll("main section[id]");
 const heroMedia = document.querySelector(".hero-media");
+const menuToggle = document.querySelector(".menu-toggle");
 const randomGallery = document.querySelector("[data-random-gallery]");
 const frameButtons = document.querySelectorAll("[data-frame-trigger]");
 const randomizeFramesButton = document.querySelector("[data-randomize-frames]");
@@ -78,6 +80,40 @@ if (document.readyState === "loading") {
 } else {
   markPageReady();
 }
+
+function setMenuOpen(isOpen) {
+  if (!siteHeader || !menuToggle) {
+    return;
+  }
+
+  siteHeader.classList.toggle("is-menu-open", isOpen);
+  menuToggle.setAttribute("aria-expanded", String(isOpen));
+}
+
+if (menuToggle) {
+  menuToggle.addEventListener("click", () => {
+    const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+    setMenuOpen(!isOpen);
+  });
+}
+
+navLinks.forEach((link) => {
+  link.addEventListener("click", () => {
+    setMenuOpen(false);
+  });
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    setMenuOpen(false);
+  }
+});
+
+window.addEventListener("resize", () => {
+  if (window.matchMedia("(min-width: 761px)").matches) {
+    setMenuOpen(false);
+  }
+}, { passive: true });
 
 const panelObserver = new IntersectionObserver(
   (entries) => {

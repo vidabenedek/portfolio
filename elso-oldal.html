@@ -74,7 +74,16 @@
     <header class="site-header">
       <a class="site-mark" href="#top">VIDA BENEDEK</a>
 
-      <nav class="site-nav" aria-label="Main navigation">
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="menu-toggle-lines" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+        <span class="menu-toggle-label">MENU</span>
+      </button>
+
+      <nav class="site-nav" id="site-nav" aria-label="Main navigation">
         <a href="#showreel">SHOWREEL</a>
         <a href="#about">ABOUT</a>
         <a href="#work">WORK</a>

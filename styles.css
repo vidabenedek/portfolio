@@ -122,6 +122,40 @@ body.is-ready .page-loader {
   letter-spacing: 0.18em;
 }
 
+.menu-toggle {
+  display: none;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  background: rgba(6, 8, 12, 0.42);
+  color: var(--text);
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.menu-toggle-lines {
+  display: grid;
+  gap: 5px;
+  width: 20px;
+}
+
+.menu-toggle-lines span {
+  display: block;
+  height: 2px;
+  background: currentColor;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.menu-toggle-label {
+  line-height: 1;
+}
+
 .site-nav {
   display: flex;
   flex-wrap: wrap;
@@ -149,6 +183,8 @@ body.is-ready .page-loader {
 .site-nav a:hover,
 .site-nav a.is-active,
 .site-nav a:focus-visible,
+.menu-toggle:hover,
+.menu-toggle:focus-visible,
 .button-link:hover,
 .button-link:focus-visible,
 .contact-links a:hover,
@@ -807,16 +843,44 @@ h2 {
   }
 
   .site-header {
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
     gap: 12px;
     padding: 12px 0;
   }
 
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 112px;
+  }
+
+  .site-header.is-menu-open .menu-toggle-lines span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .site-header.is-menu-open .menu-toggle-lines span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .site-header.is-menu-open .menu-toggle-lines span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
   .site-nav {
-    display: grid;
+    display: none;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     justify-content: stretch;
     gap: 8px;
+    grid-column: 1 / -1;
+    padding: 8px 0 4px;
+  }
+
+  .site-header.is-menu-open .site-nav {
+    display: grid;
   }
 
   .site-mark {
@@ -935,6 +999,14 @@ h2 {
     grid-template-columns: 1fr;
   }
 
+  .menu-toggle {
+    min-width: 92px;
+  }
+
+  .menu-toggle-label {
+    display: none;
+  }
+
   .showreel-overlay {
     flex-direction: column;
     gap: 6px;
@@ -944,6 +1016,7 @@ h2 {
 
 @media (hover: none) and (pointer: coarse) {
   .site-nav a:hover,
+  .menu-toggle:hover,
   .button-link:hover,
   .contact-links a:hover,
   .showreel-control:hover,
