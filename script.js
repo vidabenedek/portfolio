@@ -14,7 +14,9 @@ const showreelMuteButton = document.querySelector("[data-showreel-toggle-mute]")
 const showreelFullscreenButton = document.querySelector("[data-showreel-fullscreen]");
 
 // All random music-video reference frames used by this section live here.
-const clipFrameDirectory = randomGallery?.dataset.referenceFolder || "clip-stills/";
+const clipFrameDirectory = randomGallery && randomGallery.dataset.referenceFolder
+  ? randomGallery.dataset.referenceFolder
+  : "clip-stills/";
 const clipFrameFiles = [
   "Képernyőfotó 2026-04-17 - 16.23.04.png",
   "Képernyőfotó 2026-04-17 - 16.23.40.png",
@@ -294,7 +296,7 @@ if (showreelVideo) {
   const canAutoplayShowreel =
     window.matchMedia("(min-width: 761px)").matches &&
     !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
-    !navigator.connection?.saveData;
+    !(navigator.connection && navigator.connection.saveData);
 
   if (canAutoplayShowreel) {
     const startPlayback = showreelVideo.play();
