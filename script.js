@@ -242,9 +242,16 @@ function syncShowreelControls() {
 if (showreelVideo) {
   syncShowreelControls();
 
-  const startPlayback = showreelVideo.play();
-  if (startPlayback && typeof startPlayback.catch === "function") {
-    startPlayback.catch(() => {});
+  const canAutoplayShowreel =
+    window.matchMedia("(min-width: 761px)").matches &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+    !navigator.connection?.saveData;
+
+  if (canAutoplayShowreel) {
+    const startPlayback = showreelVideo.play();
+    if (startPlayback && typeof startPlayback.catch === "function") {
+      startPlayback.catch(() => {});
+    }
   }
 
   if (showreelPlayButton) {

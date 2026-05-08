@@ -30,6 +30,11 @@ body {
   overflow-x: hidden;
 }
 
+button,
+a {
+  touch-action: manipulation;
+}
+
 body::before {
   content: "";
   position: fixed;
@@ -89,7 +94,7 @@ body.is-ready .page-loader {
 .page-shell {
   width: min(calc(100% - 32px), var(--max-width));
   margin: 0 auto;
-  padding: 18px 0 72px;
+  padding: 18px max(0px, env(safe-area-inset-right)) calc(72px + env(safe-area-inset-bottom)) max(0px, env(safe-area-inset-left));
 }
 
 .site-header {
@@ -131,6 +136,7 @@ body.is-ready .page-loader {
   border: 1px solid var(--line);
   background: rgba(6, 8, 12, 0.42);
   padding: 12px 16px;
+  min-height: 44px;
   font-size: 0.8rem;
   letter-spacing: 0.12em;
   transition:
@@ -363,6 +369,7 @@ h1 {
   background: rgba(6, 8, 12, 0.56);
   color: var(--text);
   padding: 12px 16px;
+  min-height: 44px;
   font: inherit;
   font-size: 0.78rem;
   letter-spacing: 0.16em;
@@ -568,6 +575,7 @@ h2 {
   background: rgba(6, 8, 12, 0.54);
   color: var(--text);
   padding: 14px 18px;
+  min-height: 44px;
   font: inherit;
   font-size: 0.82rem;
   letter-spacing: 0.16em;
@@ -616,6 +624,7 @@ h2 {
   cursor: pointer;
   overflow: hidden;
   appearance: none;
+  touch-action: manipulation;
   transition:
     transform 0.28s ease,
     border-color 0.28s ease,
@@ -740,6 +749,7 @@ h2 {
 .contact-line {
   font-size: clamp(1.8rem, 4vw, 3.4rem);
   line-height: 0.95;
+  overflow-wrap: anywhere;
 }
 
 .contact-line + .contact-line {
@@ -792,22 +802,56 @@ h2 {
 
 @media (max-width: 760px) {
   .page-shell {
-    width: min(calc(100% - 20px), var(--max-width));
-    padding-top: 10px;
+    width: min(calc(100% - 20px - env(safe-area-inset-left) - env(safe-area-inset-right)), var(--max-width));
+    padding-top: max(10px, env(safe-area-inset-top));
   }
 
   .site-header {
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px 0;
   }
 
   .site-nav {
-    justify-content: flex-start;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: stretch;
+    gap: 8px;
+  }
+
+  .site-mark {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .hero {
     min-height: auto;
-    padding: 26px 18px;
+    padding: 28px 18px 24px;
+  }
+
+  h1 {
+    max-width: 8ch;
+    font-size: clamp(4rem, 24vw, 6.4rem);
+    letter-spacing: -0.045em;
+    overflow-wrap: anywhere;
+  }
+
+  h2 {
+    font-size: clamp(2.6rem, 16vw, 4.2rem);
+    letter-spacing: -0.04em;
+  }
+
+  .clip-lab h4,
+  .work-card h4 {
+    letter-spacing: -0.035em;
+    overflow-wrap: anywhere;
+  }
+
+  .hero-text,
+  .about-copy p,
+  .detail-list {
+    line-height: 1.36;
   }
 
   .showreel {
@@ -858,6 +902,11 @@ h2 {
   .clip-lab-button,
   .showreel-control {
     width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    text-align: center;
   }
 
   .section-heading {
@@ -871,6 +920,47 @@ h2 {
 
   .work-cards {
     grid-template-columns: 1fr;
+  }
+
+  .clip-frame-large,
+  .clip-frame-tall,
+  .clip-frame-wide,
+  .videoclip-shot {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .site-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .showreel-overlay {
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .site-nav a:hover,
+  .button-link:hover,
+  .contact-links a:hover,
+  .showreel-control:hover,
+  .clip-lab-button:hover,
+  .fact-card:hover,
+  .timeline-card:hover,
+  .work-card:hover,
+  .videoclip-shot:hover img,
+  .featured-visual:hover img,
+  .clip-frame:hover,
+  .clip-frame:hover img {
+    transform: none;
+  }
+
+  .clip-frame:hover::before,
+  .clip-frame:hover::after {
+    opacity: 0;
   }
 }
 
