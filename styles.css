@@ -142,8 +142,11 @@ body.is-ready .page-loader {
 
 .site-nav a:hover,
 .site-nav a.is-active,
+.site-nav a:focus-visible,
 .button-link:hover,
-.contact-links a:hover {
+.button-link:focus-visible,
+.contact-links a:hover,
+.contact-links a:focus-visible {
   background: rgba(253, 28, 3, 0.1);
   border-color: var(--line-strong);
   box-shadow: 0 0 0 1px rgba(253, 28, 3, 0.18);
@@ -203,7 +206,6 @@ body.is-ready .page-loader {
 .section-index,
 .meta-label,
 .fact-label,
-.group-heading span,
 .work-year {
   margin: 0;
   color: var(--text-soft);
@@ -470,7 +472,8 @@ h2 {
 }
 
 .featured-copy h3,
-.work-card h3 {
+.work-card h4 {
+  margin: 0;
   font-size: clamp(1.8rem, 4vw, 3.4rem);
   line-height: 0.95;
   letter-spacing: -0.05em;
@@ -519,6 +522,7 @@ h2 {
 .videoclip-shot {
   margin: 0;
   min-height: 260px;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border: 1px solid var(--line);
   background: #06080c;
@@ -552,7 +556,7 @@ h2 {
   gap: 20px;
 }
 
-.clip-lab h3 {
+.clip-lab h4 {
   margin-top: 10px;
   font-size: clamp(2rem, 4vw, 3.8rem);
   line-height: 0.9;
@@ -605,6 +609,7 @@ h2 {
 .clip-frame {
   position: relative;
   min-height: 260px;
+  aspect-ratio: 16 / 9;
   padding: 0;
   border: 1px solid var(--line);
   background: #06080c;
@@ -685,6 +690,7 @@ h2 {
 .clip-frame-tall {
   grid-area: tall;
   min-height: 100%;
+  aspect-ratio: 3 / 4;
 }
 
 .clip-frame-wide {
@@ -695,6 +701,13 @@ h2 {
 .group-heading {
   padding-bottom: 12px;
   border-bottom: 1px solid var(--line);
+}
+
+.group-heading h3 {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.82rem;
+  letter-spacing: 0.16em;
 }
 
 .work-cards {
@@ -858,5 +871,19 @@ h2 {
 
   .work-cards {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

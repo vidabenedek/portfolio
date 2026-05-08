@@ -66,11 +66,18 @@ const clipFrameSources = clipFrameFiles.map((fileName) => `${clipFrameDirectory}
 
 let currentFrameSelection = [];
 let isSwitchingFrames = false;
+let isHeroTicking = false;
 
-window.addEventListener("load", () => {
+function markPageReady() {
   body.classList.remove("is-loading");
   body.classList.add("is-ready");
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", markPageReady, { once: true });
+} else {
+  markPageReady();
+}
 
 const panelObserver = new IntersectionObserver(
   (entries) => {
@@ -118,9 +125,18 @@ window.addEventListener("scroll", () => {
     return;
   }
 
-  const offset = Math.min(window.scrollY * 0.08, 36);
-  heroMedia.style.transform = `scale(1.03) translateY(${offset}px)`;
-});
+  if (isHeroTicking) {
+    return;
+  }
+
+  isHeroTicking = true;
+
+  window.requestAnimationFrame(() => {
+    const offset = Math.min(window.scrollY * 0.08, 36);
+    heroMedia.style.transform = `scale(1.03) translateY(${offset}px)`;
+    isHeroTicking = false;
+  });
+}, { passive: true });
 
 function shuffleArray(items) {
   const shuffled = [...items];
@@ -171,6 +187,7 @@ function applyFrameSelection(nextSelection) {
     window.setTimeout(() => {
       image.src = nextSource;
       image.alt = getFrameLabel(nextSource);
+      button.setAttribute("aria-label", `Show another random music video frame. Current image: ${image.alt}`);
     }, 140);
 
     window.setTimeout(() => {
