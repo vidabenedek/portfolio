@@ -65,6 +65,10 @@ const clipFrameFiles = [
   "Still 2026-04-17 161445_1.1.8.jpg",
 ];
 const clipFrameSources = clipFrameFiles.map((fileName) => `${clipFrameDirectory}${fileName}`);
+const clipFrameMobileSources = clipFrameFiles.map((_, index) => {
+  const frameNumber = String(index + 1).padStart(3, "0");
+  return `clip-stills-mobile/frame-${frameNumber}.jpg`;
+});
 
 let currentFrameSelection = [];
 let isSwitchingFrames = false;
@@ -196,14 +200,23 @@ function getFrameLabel(source) {
   return `Clip still ${readableName}`;
 }
 
+function getClipFrameSources() {
+  if (window.matchMedia("(max-width: 760px)").matches) {
+    return clipFrameMobileSources;
+  }
+
+  return clipFrameSources;
+}
+
 function getNextFrameSelection() {
+  const activeFrameSources = getClipFrameSources();
   const currentSet = new Set(currentFrameSelection);
-  const availableSources = clipFrameSources.filter((source) => !currentSet.has(source));
-  const selectionPool = availableSources.length >= frameButtons.length ? availableSources : clipFrameSources;
+  const availableSources = activeFrameSources.filter((source) => !currentSet.has(source));
+  const selectionPool = availableSources.length >= frameButtons.length ? availableSources : activeFrameSources;
   const nextSelection = shuffleArray(selectionPool).slice(0, frameButtons.length);
 
   if (nextSelection.length < frameButtons.length) {
-    return shuffleArray(clipFrameSources).slice(0, frameButtons.length);
+    return shuffleArray(activeFrameSources).slice(0, frameButtons.length);
   }
 
   return nextSelection;
@@ -249,7 +262,7 @@ function randomizeFrames() {
 }
 
 if (frameButtons.length) {
-  currentFrameSelection = shuffleArray(clipFrameSources).slice(0, frameButtons.length);
+  currentFrameSelection = shuffleArray(getClipFrameSources()).slice(0, frameButtons.length);
   applyFrameSelection(currentFrameSelection);
 
   frameButtons.forEach((button) => {

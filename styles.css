@@ -41,7 +41,7 @@ body::before {
   inset: 0;
   background:
     linear-gradient(rgba(3, 5, 9, 0.2), rgba(3, 5, 9, 0.72)),
-    url("hero-background.jpg") center center / cover no-repeat;
+    url("optimized/hero-background-1200.jpg") center center / cover no-repeat;
   opacity: 0.22;
   transform: scale(1.03);
   transition: transform 0.3s ease-out;
@@ -120,6 +120,7 @@ body.is-ready .page-loader {
 .site-mark {
   font-size: 0.95rem;
   letter-spacing: 0.18em;
+  white-space: nowrap;
 }
 
 .menu-toggle {
@@ -225,7 +226,7 @@ body.is-ready .page-loader {
   inset: 0;
   background:
     linear-gradient(90deg, rgba(3, 5, 9, 0.88) 8%, rgba(3, 5, 9, 0.38) 55%, rgba(3, 5, 9, 0.76) 100%),
-    url("hero-background.jpg") center center / cover no-repeat;
+    url("optimized/hero-background-1200.jpg") center center / cover no-repeat;
   transform: scale(1.03);
   will-change: transform;
   overflow: hidden;
@@ -264,11 +265,18 @@ p {
 
 h1 {
   margin-top: 14px;
-  max-width: 9ch;
   font-size: clamp(4.2rem, 15vw, 11rem);
   line-height: 0.86;
   letter-spacing: -0.08em;
   text-shadow: 0 20px 45px var(--shadow);
+}
+
+.name-line {
+  display: block;
+}
+
+.no-break {
+  white-space: nowrap;
 }
 
 .hero-text {
@@ -895,10 +903,9 @@ h2 {
   }
 
   h1 {
-    max-width: 8ch;
-    font-size: clamp(4rem, 24vw, 6.4rem);
+    max-width: 100%;
+    font-size: clamp(3rem, 17vw, 5.4rem);
     letter-spacing: -0.045em;
-    overflow-wrap: anywhere;
   }
 
   h2 {
