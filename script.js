@@ -13,6 +13,10 @@ const showreelPlayButton = document.querySelector("[data-showreel-toggle-play]")
 const showreelMuteButton = document.querySelector("[data-showreel-toggle-mute]");
 const showreelFullscreenButton = document.querySelector("[data-showreel-fullscreen]");
 
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
 // All random music-video reference frames used by this section live here.
 const clipFrameDirectory = randomGallery && randomGallery.dataset.referenceFolder
   ? randomGallery.dataset.referenceFolder
@@ -77,6 +81,10 @@ let isSwitchingFrames = false;
 let isHeroTicking = false;
 
 function markPageReady() {
+  if (!window.location.hash) {
+    window.scrollTo(0, 0);
+  }
+
   body.classList.remove("is-loading");
   body.classList.add("is-ready");
 }

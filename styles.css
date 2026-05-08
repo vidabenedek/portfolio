@@ -898,8 +898,13 @@ h2 {
   }
 
   .hero {
-    min-height: auto;
+    min-height: calc(100svh - 92px);
     padding: 28px 18px 24px;
+  }
+
+  .panel {
+    opacity: 1;
+    transform: none;
   }
 
   h1 {
