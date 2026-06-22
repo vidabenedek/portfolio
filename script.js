@@ -12,6 +12,7 @@ const showreelVideo = document.querySelector("[data-showreel-video]");
 const showreelPlayButton = document.querySelector("[data-showreel-toggle-play]");
 const showreelMuteButton = document.querySelector("[data-showreel-toggle-mute]");
 const showreelFullscreenButton = document.querySelector("[data-showreel-fullscreen]");
+const blobTracker = document.querySelector("[data-blob-tracker]");
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -97,6 +98,360 @@ let currentFrameSelection = [];
 let isSwitchingFrames = false;
 let isHeroTicking = false;
 
+function initBlobTracker() {
+  if (!blobTracker || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+
+  const context = blobTracker.getContext("2d", { alpha: true });
+
+  if (!context) {
+    return;
+  }
+
+  const trackedSelector = [
+    "a",
+    "button",
+    ".section-heading",
+    ".work-card",
+    ".fact-card",
+    ".timeline-card",
+    ".videoclip-shot",
+    ".clip-frame",
+    ".showreel-frame",
+  ].join(",");
+
+  const pointer = {
+    x: window.innerWidth * 0.5,
+    y: window.innerHeight * 0.5,
+    active: false,
+  };
+  const blobPoints = [];
+  let trackedElements = [];
+  let highlightedElement = null;
+  let width = 0;
+  let height = 0;
+  let pixelRatio = 1;
+  let time = 0;
+  let lastScrollY = window.scrollY;
+  let scrollVelocity = 0;
+
+  function resizeCanvas() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    blobTracker.width = Math.floor(width * pixelRatio);
+    blobTracker.height = Math.floor(height * pixelRatio);
+    blobTracker.style.width = `${width}px`;
+    blobTracker.style.height = `${height}px`;
+    context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+  }
+
+  function getVisibleTrackedElements() {
+    const viewportCenterX = width / 2;
+    const viewportCenterY = height / 2;
+
+    return Array.from(document.querySelectorAll(trackedSelector))
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        const visible =
+          rect.width > 24 &&
+          rect.height > 18 &&
+          rect.bottom > 0 &&
+          rect.right > 0 &&
+          rect.top < height &&
+          rect.left < width;
+
+        return {
+          element,
+          rect,
+          distance: Math.hypot(
+            rect.left + rect.width / 2 - viewportCenterX,
+            rect.top + rect.height / 2 - viewportCenterY
+          ),
+          visible,
+        };
+      })
+      .filter((item) => item.visible)
+      .sort((a, b) => a.distance - b.distance)
+      .slice(0, window.matchMedia("(max-width: 760px)").matches ? 5 : 9);
+  }
+
+  function easePoint(point, targetX, targetY, targetRadius, targetWeight) {
+    point.x += (targetX - point.x) * 0.16;
+    point.y += (targetY - point.y) * 0.16;
+    point.radius += (targetRadius - point.radius) * 0.12;
+    point.weight += (targetWeight - point.weight) * 0.12;
+  }
+
+  function setHighlightedElement(nextElement) {
+    if (highlightedElement === nextElement) {
+      return;
+    }
+
+    if (highlightedElement) {
+      highlightedElement.classList.remove("is-blob-tracked");
+    }
+
+    highlightedElement = nextElement;
+
+    if (highlightedElement) {
+      highlightedElement.classList.add("is-blob-tracked");
+    }
+  }
+
+  function rebuildBlobPoints() {
+    const scrollDelta = window.scrollY - lastScrollY;
+    lastScrollY = window.scrollY;
+    scrollVelocity += Math.max(-80, Math.min(80, scrollDelta)) * 0.08;
+    trackedElements = getVisibleTrackedElements();
+
+    const targetPoints = [];
+    const pointerTarget = pointer.active
+      ? pointer
+      : {
+          x: width * (0.5 + Math.sin(time * 0.018) * 0.28),
+          y: height * (0.5 + Math.cos(time * 0.014) * 0.22),
+        };
+
+    targetPoints.push({
+      x: pointerTarget.x,
+      y: pointerTarget.y + scrollVelocity,
+      radius: pointer.active ? 72 : 58,
+      weight: pointer.active ? 0.96 : 0.66,
+    });
+
+    trackedElements.forEach(({ rect }, index) => {
+      const phase = time * 0.032 + index * 1.7;
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const radius = Math.max(30, Math.min(104, Math.min(rect.width, rect.height) * 0.34));
+      const driftX = Math.round(Math.sin(phase) * Math.min(12, rect.width * 0.04) / 8) * 8;
+      const driftY = Math.round(Math.cos(phase * 0.8) * Math.min(10, rect.height * 0.05) / 8) * 8;
+
+      targetPoints.push({
+        x: centerX + driftX,
+        y: centerY + driftY,
+        radius,
+        weight: 0.72,
+      });
+
+      if (rect.width > 260 && rect.height > 180 && index % 2 === 0) {
+        targetPoints.push({
+          x: rect.left + rect.width * 0.28 + Math.round(Math.sin(phase * 1.2) * 8 / 8) * 8,
+          y: rect.top + rect.height * 0.32,
+          radius: radius * 0.54,
+          weight: 0.36,
+        });
+      }
+    });
+
+    targetPoints.forEach((target, index) => {
+      if (!blobPoints[index]) {
+        blobPoints[index] = {
+          x: target.x,
+          y: target.y,
+          radius: target.radius,
+          weight: 0,
+        };
+      }
+
+      easePoint(blobPoints[index], target.x, target.y, target.radius, target.weight);
+    });
+
+    blobPoints.splice(targetPoints.length);
+    scrollVelocity *= 0.84;
+  }
+
+  function glitchNoise(x, y, seed) {
+    return Math.sin(x * 0.041 + y * 0.067 + time * 0.42 + seed) *
+      Math.cos(x * 0.026 - y * 0.049 + time * 0.34 + seed * 1.7);
+  }
+
+  function fieldValue(x, y) {
+    return blobPoints.reduce((sum, point) => {
+      const dx = Math.abs(x - point.x);
+      const dy = Math.abs(y - point.y);
+      const boxDistance = Math.max(dx, dy * 0.96) + Math.min(dx, dy) * 0.06;
+      const distanceSquared = boxDistance * boxDistance + 70;
+
+      return sum + ((point.radius * point.radius) / distanceSquared) * point.weight;
+    }, 0);
+  }
+
+  function interpolateEdge(a, b, threshold) {
+    const range = b.value - a.value || 1;
+    const amount = (threshold - a.value) / range;
+
+    return {
+      x: a.x + (b.x - a.x) * amount,
+      y: a.y + (b.y - a.y) * amount,
+    };
+  }
+
+  function drawBrokenSegment(fromPoint, toPoint, gridSize) {
+    const midX = (fromPoint.x + toPoint.x) / 2;
+    const midY = (fromPoint.y + toPoint.y) / 2;
+    const damage = glitchNoise(midX, midY, gridSize);
+
+    if (damage < -0.48) {
+      return;
+    }
+
+    const segmentCount = damage > 0.28 ? 3 : 2;
+    const jitterStrength = 5.8 + Math.abs(damage) * 12;
+
+    for (let index = 0; index < segmentCount; index += 1) {
+      const startAmount = index / segmentCount;
+      const endAmount = (index + 0.42 + glitchNoise(midX, midY, index) * 0.18) / segmentCount;
+
+      if (endAmount <= startAmount || glitchNoise(midX, midY, index + 10) < -0.34) {
+        continue;
+      }
+
+      const startX = fromPoint.x + (toPoint.x - fromPoint.x) * startAmount;
+      const startY = fromPoint.y + (toPoint.y - fromPoint.y) * startAmount;
+      const endX = fromPoint.x + (toPoint.x - fromPoint.x) * Math.min(endAmount, 1);
+      const endY = fromPoint.y + (toPoint.y - fromPoint.y) * Math.min(endAmount, 1);
+      const startJitter = glitchNoise(startX, startY, index) * jitterStrength;
+      const endJitter = glitchNoise(endX, endY, index + 4) * jitterStrength;
+      const wobble = Math.sin(time * 0.19 + midY * 0.03) * 2.6;
+      const isHorizontal = Math.abs(toPoint.x - fromPoint.x) > Math.abs(toPoint.y - fromPoint.y);
+
+      context.moveTo(
+        startX + (isHorizontal ? wobble : startJitter),
+        startY + (isHorizontal ? startJitter : 0)
+      );
+      context.lineTo(
+        endX + (isHorizontal ? wobble : endJitter),
+        endY + (isHorizontal ? endJitter : 0)
+      );
+    }
+  }
+
+  function drawContour(threshold, color, lineWidth, gridSize) {
+    const edgePairs = {
+      1: [[3, 0]],
+      2: [[0, 1]],
+      3: [[3, 1]],
+      4: [[1, 2]],
+      5: [[3, 2], [0, 1]],
+      6: [[0, 2]],
+      7: [[3, 2]],
+      8: [[2, 3]],
+      9: [[0, 2]],
+      10: [[0, 3], [1, 2]],
+      11: [[1, 2]],
+      12: [[1, 3]],
+      13: [[0, 1]],
+      14: [[3, 0]],
+    };
+
+    context.beginPath();
+
+    for (let y = -gridSize; y < height + gridSize; y += gridSize) {
+      for (let x = -gridSize; x < width + gridSize; x += gridSize) {
+        const corners = [
+          { x, y, value: fieldValue(x, y) },
+          { x: x + gridSize, y, value: fieldValue(x + gridSize, y) },
+          { x: x + gridSize, y: y + gridSize, value: fieldValue(x + gridSize, y + gridSize) },
+          { x, y: y + gridSize, value: fieldValue(x, y + gridSize) },
+        ];
+        const caseIndex =
+          (corners[0].value > threshold ? 1 : 0) |
+          (corners[1].value > threshold ? 2 : 0) |
+          (corners[2].value > threshold ? 4 : 0) |
+          (corners[3].value > threshold ? 8 : 0);
+        const pairs = edgePairs[caseIndex];
+
+        if (!pairs) {
+          continue;
+        }
+
+        const edgePoints = [
+          interpolateEdge(corners[0], corners[1], threshold),
+          interpolateEdge(corners[1], corners[2], threshold),
+          interpolateEdge(corners[2], corners[3], threshold),
+          interpolateEdge(corners[3], corners[0], threshold),
+        ];
+
+        pairs.forEach(([from, to]) => {
+          drawBrokenSegment(edgePoints[from], edgePoints[to], gridSize);
+        });
+      }
+    }
+
+    context.strokeStyle = color;
+    context.lineWidth = lineWidth + Math.sin(time * 0.62) * 0.28;
+    context.lineCap = "square";
+    context.lineJoin = "miter";
+    context.setLineDash([10 + Math.sin(time * 0.34) * 3, 8 + Math.cos(time * 0.48) * 4]);
+    context.stroke();
+    context.setLineDash([]);
+  }
+
+  function drawTrackedBoxes() {
+    context.save();
+    context.font = "600 10px League Spartan, Helvetica, Arial, sans-serif";
+    context.textBaseline = "top";
+
+    trackedElements.forEach(({ rect, element }, index) => {
+      const isHot = element === highlightedElement;
+      const lineDrift = glitchNoise(rect.left, rect.top, index) * 3;
+      const alpha = isHot ? 0.48 : 0.1;
+
+      context.strokeStyle = `rgba(253, 28, 3, ${alpha})`;
+      context.lineWidth = isHot ? 1.2 : 0.7;
+      context.setLineDash(isHot ? [16, 4, 3, 7] : [14, 10]);
+      context.strokeRect(
+        rect.left + lineDrift,
+        rect.top - lineDrift * 0.5,
+        rect.width,
+        rect.height
+      );
+      context.setLineDash([]);
+
+      if (isHot) {
+        context.fillStyle = `rgba(253, 28, 3, ${alpha})`;
+        context.fillText(`SIGNAL_${String(index + 1).padStart(2, "0")}`, rect.left + 8, rect.top + 8);
+      }
+    });
+
+    context.restore();
+  }
+
+  function updateHighlightedElement() {
+    const element = document.elementFromPoint(pointer.x, pointer.y);
+    const nextElement = element ? element.closest(trackedSelector) : null;
+    setHighlightedElement(nextElement);
+  }
+
+  function render() {
+    time += 1;
+    rebuildBlobPoints();
+    updateHighlightedElement();
+    context.clearRect(0, 0, width, height);
+    drawContour(0.92 + Math.sin(time * 0.16) * 0.035, "rgba(253, 28, 3, 0.88)", 2, 28);
+    drawTrackedBoxes();
+
+    window.requestAnimationFrame(render);
+  }
+
+  window.addEventListener("pointermove", (event) => {
+    pointer.x = event.clientX;
+    pointer.y = event.clientY;
+    pointer.active = true;
+  }, { passive: true });
+
+  window.addEventListener("pointerleave", () => {
+    pointer.active = false;
+  });
+
+  window.addEventListener("resize", resizeCanvas, { passive: true });
+  resizeCanvas();
+  render();
+}
+
 function markPageReady() {
   if (!window.location.hash) {
     window.scrollTo(0, 0);
@@ -111,6 +466,8 @@ if (document.readyState === "loading") {
 } else {
   markPageReady();
 }
+
+initBlobTracker();
 
 function setMenuOpen(isOpen) {
   if (!siteHeader || !menuToggle) {
