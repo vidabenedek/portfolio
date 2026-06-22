@@ -579,11 +579,22 @@ h2 {
   background: #06080c;
 }
 
+.videoclip-shot a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .videoclip-shot img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.45s ease;
+}
+
+.videoclip-shot a:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: -6px;
 }
 
 .videoclip-shot:hover img {
