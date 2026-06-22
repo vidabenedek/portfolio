@@ -3,30 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Vida Benedek | Director & Creative Director</title>
+  <title>Vida Benedek | Budapest Director & Creative Director Portfolio</title>
   <meta
     name="description"
-    content="Vida Benedek is a Budapest-based director and creative director working across commercials, music videos, short films, visual concepts, and AI-assisted analog worlds."
+    content="Budapest-based director and creative director Vida Benedek creates commercials, music videos, short films, visual concepts, and AI-assisted analog worlds."
   >
   <meta name="author" content="Vida Benedek">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="https://vidabenedek.github.io/portfolio/">
+  <link rel="alternate" hreflang="en" href="https://vidabenedek.github.io/portfolio/">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="en_US">
   <meta property="og:site_name" content="Vida Benedek Portfolio">
-  <meta property="og:title" content="Vida Benedek | Director & Creative Director">
+  <meta property="og:title" content="Vida Benedek | Budapest Director & Creative Director Portfolio">
   <meta
     property="og:description"
-    content="Commercials, music videos, short films, and visual concepts by Budapest-based director Vida Benedek."
+    content="Commercials, music videos, short films, and visual concepts by Budapest-based director and creative director Vida Benedek."
   >
   <meta property="og:url" content="https://vidabenedek.github.io/portfolio/">
   <meta property="og:image" content="https://vidabenedek.github.io/portfolio/hero-background.jpg">
   <meta property="og:image:alt" content="Vida Benedek director portfolio hero image">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Vida Benedek | Director & Creative Director">
+  <meta name="twitter:title" content="Vida Benedek | Budapest Director & Creative Director Portfolio">
   <meta
     name="twitter:description"
-    content="Commercials, music videos, short films, and visual concepts by Budapest-based director Vida Benedek."
+    content="Commercials, music videos, short films, and visual concepts by Budapest-based director and creative director Vida Benedek."
   >
   <meta name="twitter:image" content="https://vidabenedek.github.io/portfolio/hero-background.jpg">
   <meta name="twitter:image:alt" content="Vida Benedek director portfolio hero image">
@@ -37,31 +41,70 @@
     href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   >
-  <link rel="stylesheet" href="styles.css?v=20260508-mobile-sections">
+  <link rel="stylesheet" href="styles.css?v=20260622-mobile-opt">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Vida Benedek",
-      "jobTitle": "Director and Creative Director",
-      "url": "https://vidabenedek.github.io/portfolio/",
-      "image": "https://vidabenedek.github.io/portfolio/hero-background.jpg",
-      "email": "mailto:dir.vida@gmail.com",
-      "telephone": "+36306549109",
-      "sameAs": [
-        "https://www.instagram.com/vidabenedek"
-      ],
-      "knowsAbout": [
-        "Commercial direction",
-        "Music video direction",
-        "Short films",
-        "Visual concepts",
-        "Creative direction"
-      ],
-      "worksFor": {
-        "@type": "Organization",
-        "name": "ODESA Films"
-      }
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://vidabenedek.github.io/portfolio/#website",
+          "url": "https://vidabenedek.github.io/portfolio/",
+          "name": "Vida Benedek Portfolio",
+          "inLanguage": "en",
+          "publisher": {
+            "@id": "https://vidabenedek.github.io/portfolio/#vida-benedek"
+          }
+        },
+        {
+          "@type": "ProfilePage",
+          "@id": "https://vidabenedek.github.io/portfolio/#profile",
+          "url": "https://vidabenedek.github.io/portfolio/",
+          "name": "Vida Benedek | Director & Creative Director Portfolio",
+          "description": "Commercials, music videos, short films, and visual concepts by Budapest-based director and creative director Vida Benedek.",
+          "inLanguage": "en",
+          "mainEntity": {
+            "@id": "https://vidabenedek.github.io/portfolio/#vida-benedek"
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://vidabenedek.github.io/portfolio/#vida-benedek",
+          "name": "Vida Benedek",
+          "givenName": "Benedek",
+          "familyName": "Vida",
+          "jobTitle": "Director and Creative Director",
+          "url": "https://vidabenedek.github.io/portfolio/",
+          "mainEntityOfPage": "https://vidabenedek.github.io/portfolio/",
+          "image": "https://vidabenedek.github.io/portfolio/hero-background.jpg",
+          "email": "mailto:dir.vidab@gmail.com",
+          "telephone": "+36306549109",
+          "sameAs": [
+            "https://www.instagram.com/vidabenedek"
+          ],
+          "knowsAbout": [
+            "Commercial direction",
+            "Music video direction",
+            "Short films",
+            "Visual concepts",
+            "Creative direction",
+            "AI-assisted filmmaking",
+            "Film production"
+          ],
+          "hasOccupation": {
+            "@type": "Occupation",
+            "name": "Director and Creative Director",
+            "occupationLocation": {
+              "@type": "City",
+              "name": "Budapest"
+            }
+          },
+          "worksFor": {
+            "@type": "Organization",
+            "name": "ODESA Films"
+          }
+        }
+      ]
     }
   </script>
 </head>
@@ -69,6 +112,8 @@
   <div class="page-loader" aria-hidden="true">
     <span>VIDA BENEDEK</span>
   </div>
+
+  <canvas class="blob-tracker" data-blob-tracker aria-hidden="true"></canvas>
 
   <div class="page-shell">
     <header class="site-header">
@@ -368,11 +413,11 @@
         <div class="contact-grid">
           <div>
             <p class="contact-line">+36 30 654 9109</p>
-            <p class="contact-line">DIR.VIDA@GMAIL.COM</p>
+            <p class="contact-line">DIR.VIDAB@GMAIL.COM</p>
           </div>
 
           <div class="contact-links">
-            <a href="mailto:dir.vida@gmail.com">EMAIL</a>
+            <a href="mailto:dir.vidab@gmail.com">EMAIL</a>
             <a href="tel:+36306549109">PHONE</a>
             <a
               href="https://www.instagram.com/vidabenedek?igsh=bGlqdDd1ZTNyanNn&utm_source=qr"
@@ -387,6 +432,6 @@
     </main>
   </div>
 
-  <script src="script.js?v=20260508-mobile-sections"></script>
+  <script src="script.js?v=20260622-mobile-opt"></script>
 </body>
 </html>

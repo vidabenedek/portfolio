@@ -899,6 +899,10 @@ h2 {
     padding-top: max(10px, env(safe-area-inset-top));
   }
 
+  .blob-tracker {
+    opacity: 0.68;
+  }
+
   .site-header {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -1077,18 +1081,30 @@ h2 {
 
 @media (hover: none) and (pointer: coarse) {
   .site-nav a:hover,
+  .site-nav a.is-blob-tracked,
   .menu-toggle:hover,
+  .menu-toggle.is-blob-tracked,
   .button-link:hover,
+  .button-link.is-blob-tracked,
   .contact-links a:hover,
+  .contact-links a.is-blob-tracked,
   .showreel-control:hover,
+  .showreel-control.is-blob-tracked,
   .clip-lab-button:hover,
+  .clip-lab-button.is-blob-tracked,
   .fact-card:hover,
+  .fact-card.is-blob-tracked,
   .timeline-card:hover,
+  .timeline-card.is-blob-tracked,
   .work-card:hover,
+  .work-card.is-blob-tracked,
   .videoclip-shot:hover img,
+  .videoclip-shot.is-blob-tracked img,
   .featured-visual:hover img,
   .clip-frame:hover,
-  .clip-frame:hover img {
+  .clip-frame.is-blob-tracked,
+  .clip-frame:hover img,
+  .clip-frame.is-blob-tracked img {
     transform: none;
   }
 

@@ -127,6 +127,9 @@ function initBlobTracker() {
     active: false,
   };
   const blobPoints = [];
+  const mobileQuery = window.matchMedia("(max-width: 760px)");
+  const coarsePointerQuery = window.matchMedia("(hover: none) and (pointer: coarse)");
+  let trackedCandidates = [];
   let trackedElements = [];
   let highlightedElement = null;
   let width = 0;
@@ -135,11 +138,22 @@ function initBlobTracker() {
   let time = 0;
   let lastScrollY = window.scrollY;
   let scrollVelocity = 0;
+  let lastRenderTime = 0;
+  let resizeTimer = 0;
+
+  function isMobileTracker() {
+    return mobileQuery.matches || coarsePointerQuery.matches;
+  }
+
+  function refreshTrackedCandidates() {
+    trackedCandidates = Array.from(document.querySelectorAll(trackedSelector));
+  }
 
   function resizeCanvas() {
+    const mobileTracker = isMobileTracker();
     width = window.innerWidth;
     height = window.innerHeight;
-    pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    pixelRatio = Math.min(window.devicePixelRatio || 1, mobileTracker ? 1.15 : 1.75);
     blobTracker.width = Math.floor(width * pixelRatio);
     blobTracker.height = Math.floor(height * pixelRatio);
     blobTracker.style.width = `${width}px`;
@@ -147,11 +161,19 @@ function initBlobTracker() {
     context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
   }
 
+  function scheduleResize() {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => {
+      refreshTrackedCandidates();
+      resizeCanvas();
+    }, isMobileTracker() ? 180 : 80);
+  }
+
   function getVisibleTrackedElements() {
     const viewportCenterX = width / 2;
     const viewportCenterY = height / 2;
 
-    return Array.from(document.querySelectorAll(trackedSelector))
+    return trackedCandidates
       .map((element) => {
         const rect = element.getBoundingClientRect();
         const visible =
@@ -174,7 +196,7 @@ function initBlobTracker() {
       })
       .filter((item) => item.visible)
       .sort((a, b) => a.distance - b.distance)
-      .slice(0, window.matchMedia("(max-width: 760px)").matches ? 5 : 9);
+      .slice(0, isMobileTracker() ? 3 : 9);
   }
 
   function easePoint(point, targetX, targetY, targetRadius, targetWeight) {
@@ -201,9 +223,10 @@ function initBlobTracker() {
   }
 
   function rebuildBlobPoints() {
+    const mobileTracker = isMobileTracker();
     const scrollDelta = window.scrollY - lastScrollY;
     lastScrollY = window.scrollY;
-    scrollVelocity += Math.max(-80, Math.min(80, scrollDelta)) * 0.08;
+    scrollVelocity += Math.max(-80, Math.min(80, scrollDelta)) * (mobileTracker ? 0.04 : 0.08);
     trackedElements = getVisibleTrackedElements();
 
     const targetPoints = [];
@@ -217,17 +240,21 @@ function initBlobTracker() {
     targetPoints.push({
       x: pointerTarget.x,
       y: pointerTarget.y + scrollVelocity,
-      radius: pointer.active ? 72 : 58,
-      weight: pointer.active ? 0.96 : 0.66,
+      radius: pointer.active ? (mobileTracker ? 52 : 72) : (mobileTracker ? 44 : 58),
+      weight: pointer.active ? (mobileTracker ? 0.72 : 0.96) : (mobileTracker ? 0.5 : 0.66),
     });
 
     trackedElements.forEach(({ rect }, index) => {
       const phase = time * 0.032 + index * 1.7;
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const radius = Math.max(30, Math.min(104, Math.min(rect.width, rect.height) * 0.34));
-      const driftX = Math.round(Math.sin(phase) * Math.min(12, rect.width * 0.04) / 8) * 8;
-      const driftY = Math.round(Math.cos(phase * 0.8) * Math.min(10, rect.height * 0.05) / 8) * 8;
+      const radius = Math.max(
+        mobileTracker ? 24 : 30,
+        Math.min(mobileTracker ? 74 : 104, Math.min(rect.width, rect.height) * (mobileTracker ? 0.28 : 0.34))
+      );
+      const driftUnit = mobileTracker ? 10 : 8;
+      const driftX = Math.round(Math.sin(phase) * Math.min(12, rect.width * 0.04) / driftUnit) * driftUnit;
+      const driftY = Math.round(Math.cos(phase * 0.8) * Math.min(10, rect.height * 0.05) / driftUnit) * driftUnit;
 
       targetPoints.push({
         x: centerX + driftX,
@@ -236,7 +263,7 @@ function initBlobTracker() {
         weight: 0.72,
       });
 
-      if (rect.width > 260 && rect.height > 180 && index % 2 === 0) {
+      if (!mobileTracker && rect.width > 260 && rect.height > 180 && index % 2 === 0) {
         targetPoints.push({
           x: rect.left + rect.width * 0.28 + Math.round(Math.sin(phase * 1.2) * 8 / 8) * 8,
           y: rect.top + rect.height * 0.32,
@@ -290,6 +317,7 @@ function initBlobTracker() {
   }
 
   function drawBrokenSegment(fromPoint, toPoint, gridSize) {
+    const mobileTracker = isMobileTracker();
     const midX = (fromPoint.x + toPoint.x) / 2;
     const midY = (fromPoint.y + toPoint.y) / 2;
     const damage = glitchNoise(midX, midY, gridSize);
@@ -298,8 +326,8 @@ function initBlobTracker() {
       return;
     }
 
-    const segmentCount = damage > 0.28 ? 3 : 2;
-    const jitterStrength = 5.8 + Math.abs(damage) * 12;
+    const segmentCount = mobileTracker ? 1 : (damage > 0.28 ? 3 : 2);
+    const jitterStrength = (mobileTracker ? 3.2 : 5.8) + Math.abs(damage) * (mobileTracker ? 7 : 12);
 
     for (let index = 0; index < segmentCount; index += 1) {
       const startAmount = index / segmentCount;
@@ -315,7 +343,7 @@ function initBlobTracker() {
       const endY = fromPoint.y + (toPoint.y - fromPoint.y) * Math.min(endAmount, 1);
       const startJitter = glitchNoise(startX, startY, index) * jitterStrength;
       const endJitter = glitchNoise(endX, endY, index + 4) * jitterStrength;
-      const wobble = Math.sin(time * 0.19 + midY * 0.03) * 2.6;
+      const wobble = Math.sin(time * 0.19 + midY * 0.03) * (mobileTracker ? 1.4 : 2.6);
       const isHorizontal = Math.abs(toPoint.x - fromPoint.x) > Math.abs(toPoint.y - fromPoint.y);
 
       context.moveTo(
@@ -391,6 +419,8 @@ function initBlobTracker() {
   }
 
   function drawTrackedBoxes() {
+    const mobileTracker = isMobileTracker();
+
     context.save();
     context.font = "600 10px League Spartan, Helvetica, Arial, sans-serif";
     context.textBaseline = "top";
@@ -398,11 +428,11 @@ function initBlobTracker() {
     trackedElements.forEach(({ rect, element }, index) => {
       const isHot = element === highlightedElement;
       const lineDrift = glitchNoise(rect.left, rect.top, index) * 3;
-      const alpha = isHot ? 0.48 : 0.1;
+      const alpha = isHot ? (mobileTracker ? 0.34 : 0.48) : (mobileTracker ? 0.05 : 0.1);
 
       context.strokeStyle = `rgba(253, 28, 3, ${alpha})`;
       context.lineWidth = isHot ? 1.2 : 0.7;
-      context.setLineDash(isHot ? [16, 4, 3, 7] : [14, 10]);
+      context.setLineDash(isHot ? [16, 4, 3, 7] : [14, mobileTracker ? 16 : 10]);
       context.strokeRect(
         rect.left + lineDrift,
         rect.top - lineDrift * 0.5,
@@ -411,7 +441,7 @@ function initBlobTracker() {
       );
       context.setLineDash([]);
 
-      if (isHot) {
+      if (isHot && !mobileTracker) {
         context.fillStyle = `rgba(253, 28, 3, ${alpha})`;
         context.fillText(`SIGNAL_${String(index + 1).padStart(2, "0")}`, rect.left + 8, rect.top + 8);
       }
@@ -421,17 +451,40 @@ function initBlobTracker() {
   }
 
   function updateHighlightedElement() {
+    if (isMobileTracker() && !pointer.active) {
+      setHighlightedElement(null);
+      return;
+    }
+
     const element = document.elementFromPoint(pointer.x, pointer.y);
     const nextElement = element ? element.closest(trackedSelector) : null;
     setHighlightedElement(nextElement);
   }
 
-  function render() {
+  function render(now = 0) {
+    if (document.hidden) {
+      window.requestAnimationFrame(render);
+      return;
+    }
+
+    const mobileTracker = isMobileTracker();
+
+    if (mobileTracker && now - lastRenderTime < 34) {
+      window.requestAnimationFrame(render);
+      return;
+    }
+
+    lastRenderTime = now;
     time += 1;
     rebuildBlobPoints();
     updateHighlightedElement();
     context.clearRect(0, 0, width, height);
-    drawContour(0.92 + Math.sin(time * 0.16) * 0.035, "rgba(253, 28, 3, 0.88)", 2, 28);
+    drawContour(
+      0.92 + Math.sin(time * 0.16) * 0.035,
+      mobileTracker ? "rgba(253, 28, 3, 0.7)" : "rgba(253, 28, 3, 0.88)",
+      mobileTracker ? 1.4 : 2,
+      mobileTracker ? 40 : 28
+    );
     drawTrackedBoxes();
 
     window.requestAnimationFrame(render);
@@ -443,11 +496,28 @@ function initBlobTracker() {
     pointer.active = true;
   }, { passive: true });
 
+  window.addEventListener("pointerdown", (event) => {
+    pointer.x = event.clientX;
+    pointer.y = event.clientY;
+    pointer.active = true;
+  }, { passive: true });
+
+  window.addEventListener("pointerup", () => {
+    if (isMobileTracker()) {
+      window.setTimeout(() => {
+        pointer.active = false;
+      }, 420);
+    }
+  }, { passive: true });
+
   window.addEventListener("pointerleave", () => {
     pointer.active = false;
   });
 
-  window.addEventListener("resize", resizeCanvas, { passive: true });
+  window.addEventListener("resize", scheduleResize, { passive: true });
+  window.addEventListener("orientationchange", scheduleResize, { passive: true });
+
+  refreshTrackedCandidates();
   resizeCanvas();
   render();
 }
