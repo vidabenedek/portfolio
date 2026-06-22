@@ -69,6 +69,23 @@ const clipFrameFiles = [
   "Still 2026-04-17 161445_1.1.5.jpg",
   "Still 2026-04-17 161445_1.1.7.jpg",
   "Still 2026-04-17 161445_1.1.8.jpg",
+  "lenkke-frame-001.jpg",
+  "lenkke-frame-002.jpg",
+  "lenkke-frame-003.jpg",
+  "lenkke-frame-004.jpg",
+  "lenkke-frame-005.jpg",
+  "lenkke-frame-006.jpg",
+  "lenkke-frame-007.jpg",
+  "lenkke-frame-008.jpg",
+  "lenkke-frame-009.jpg",
+  "lenkke-frame-010.jpg",
+  "lenkke-frame-011.jpg",
+  "lenkke-frame-012.jpg",
+  "lenkke-frame-013.jpg",
+  "lenkke-frame-014.jpg",
+  "lenkke-frame-015.jpg",
+  "lenkke-frame-016.jpg",
+  "lenkke-frame-017.jpg",
 ];
 const clipFrameSources = clipFrameFiles.map((fileName) => `${clipFrameDirectory}${fileName}`);
 const clipFrameMobileSources = clipFrameFiles.map((_, index) => {
