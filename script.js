@@ -118,7 +118,6 @@ function initBlobTracker() {
     ".timeline-card",
     ".videoclip-shot",
     ".clip-frame",
-    ".showreel-frame",
   ].join(",");
 
   const pointer = {
@@ -196,7 +195,7 @@ function initBlobTracker() {
       })
       .filter((item) => item.visible)
       .sort((a, b) => a.distance - b.distance)
-      .slice(0, isMobileTracker() ? 3 : 9);
+      .slice(0, isMobileTracker() ? 1 : 3);
   }
 
   function easePoint(point, targetX, targetY, targetRadius, targetWeight) {
@@ -240,8 +239,8 @@ function initBlobTracker() {
     targetPoints.push({
       x: pointerTarget.x,
       y: pointerTarget.y + scrollVelocity,
-      radius: pointer.active ? (mobileTracker ? 52 : 72) : (mobileTracker ? 44 : 58),
-      weight: pointer.active ? (mobileTracker ? 0.72 : 0.96) : (mobileTracker ? 0.5 : 0.66),
+      radius: pointer.active ? (mobileTracker ? 38 : 54) : (mobileTracker ? 32 : 44),
+      weight: pointer.active ? (mobileTracker ? 0.46 : 0.62) : (mobileTracker ? 0.28 : 0.38),
     });
 
     trackedElements.forEach(({ rect }, index) => {
@@ -249,8 +248,8 @@ function initBlobTracker() {
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       const radius = Math.max(
-        mobileTracker ? 24 : 30,
-        Math.min(mobileTracker ? 74 : 104, Math.min(rect.width, rect.height) * (mobileTracker ? 0.28 : 0.34))
+        mobileTracker ? 18 : 24,
+        Math.min(mobileTracker ? 54 : 76, Math.min(rect.width, rect.height) * (mobileTracker ? 0.2 : 0.24))
       );
       const driftUnit = mobileTracker ? 10 : 8;
       const driftX = Math.round(Math.sin(phase) * Math.min(12, rect.width * 0.04) / driftUnit) * driftUnit;
@@ -263,14 +262,6 @@ function initBlobTracker() {
         weight: 0.72,
       });
 
-      if (!mobileTracker && rect.width > 260 && rect.height > 180 && index % 2 === 0) {
-        targetPoints.push({
-          x: rect.left + rect.width * 0.28 + Math.round(Math.sin(phase * 1.2) * 8 / 8) * 8,
-          y: rect.top + rect.height * 0.32,
-          radius: radius * 0.54,
-          weight: 0.36,
-        });
-      }
     });
 
     targetPoints.forEach((target, index) => {
@@ -295,6 +286,74 @@ function initBlobTracker() {
       Math.cos(x * 0.026 - y * 0.049 + time * 0.34 + seed * 1.7);
   }
 
+  function getAnimationMaskRects() {
+    return Array.from(document.querySelectorAll("[data-showreel-video]"))
+      .map((element) => element.getBoundingClientRect())
+      .filter((rect) =>
+        rect.width > 0 &&
+        rect.height > 0 &&
+        rect.bottom > 0 &&
+        rect.right > 0 &&
+        rect.top < height &&
+        rect.left < width
+      );
+  }
+
+  function isPointMasked(x, y, maskRects) {
+    return maskRects.some((rect) =>
+      x >= rect.left &&
+      x <= rect.right &&
+      y >= rect.top &&
+      y <= rect.bottom
+    );
+  }
+
+  function doLinesIntersect(a, b, c, d) {
+    const direction = (from, to, point) =>
+      (point.x - from.x) * (to.y - from.y) - (point.y - from.y) * (to.x - from.x);
+    const abToC = direction(a, b, c);
+    const abToD = direction(a, b, d);
+    const cdToA = direction(c, d, a);
+    const cdToB = direction(c, d, b);
+
+    return abToC * abToD <= 0 && cdToA * cdToB <= 0;
+  }
+
+  function doesSegmentCrossRect(fromPoint, toPoint, rect) {
+    const paddedRect = {
+      left: rect.left - 1,
+      right: rect.right + 1,
+      top: rect.top - 1,
+      bottom: rect.bottom + 1,
+    };
+    const corners = [
+      { x: paddedRect.left, y: paddedRect.top },
+      { x: paddedRect.right, y: paddedRect.top },
+      { x: paddedRect.right, y: paddedRect.bottom },
+      { x: paddedRect.left, y: paddedRect.bottom },
+    ];
+
+    return corners.some((corner, index) =>
+      doLinesIntersect(fromPoint, toPoint, corner, corners[(index + 1) % corners.length])
+    );
+  }
+
+  function isSegmentMasked(fromPoint, toPoint, maskRects) {
+    if (!maskRects.length) {
+      return false;
+    }
+
+    const midX = (fromPoint.x + toPoint.x) / 2;
+    const midY = (fromPoint.y + toPoint.y) / 2;
+
+    return (
+      isPointMasked(fromPoint.x, fromPoint.y, maskRects) ||
+      isPointMasked(midX, midY, maskRects) ||
+      isPointMasked(toPoint.x, toPoint.y, maskRects) ||
+      maskRects.some((rect) => doesSegmentCrossRect(fromPoint, toPoint, rect))
+    );
+  }
+
   function fieldValue(x, y) {
     return blobPoints.reduce((sum, point) => {
       const dx = Math.abs(x - point.x);
@@ -316,18 +375,22 @@ function initBlobTracker() {
     };
   }
 
-  function drawBrokenSegment(fromPoint, toPoint, gridSize) {
+  function drawBrokenSegment(fromPoint, toPoint, gridSize, textureScale = 1, maskRects = []) {
+    if (isSegmentMasked(fromPoint, toPoint, maskRects)) {
+      return;
+    }
+
     const mobileTracker = isMobileTracker();
     const midX = (fromPoint.x + toPoint.x) / 2;
     const midY = (fromPoint.y + toPoint.y) / 2;
     const damage = glitchNoise(midX, midY, gridSize);
 
-    if (damage < -0.48) {
+    if (damage < 0.12) {
       return;
     }
 
-    const segmentCount = mobileTracker ? 1 : (damage > 0.28 ? 3 : 2);
-    const jitterStrength = (mobileTracker ? 3.2 : 5.8) + Math.abs(damage) * (mobileTracker ? 7 : 12);
+    const segmentCount = 1;
+    const jitterStrength = ((mobileTracker ? 2.4 : 4.2) + Math.abs(damage) * (mobileTracker ? 5 : 8)) * textureScale;
 
     for (let index = 0; index < segmentCount; index += 1) {
       const startAmount = index / segmentCount;
@@ -344,20 +407,23 @@ function initBlobTracker() {
       const startJitter = glitchNoise(startX, startY, index) * jitterStrength;
       const endJitter = glitchNoise(endX, endY, index + 4) * jitterStrength;
       const wobble = Math.sin(time * 0.19 + midY * 0.03) * (mobileTracker ? 1.4 : 2.6);
+      const grainOffset = glitchNoise(midX, midY, index + 19) * (mobileTracker ? 1.2 : 2.4) * textureScale;
       const isHorizontal = Math.abs(toPoint.x - fromPoint.x) > Math.abs(toPoint.y - fromPoint.y);
 
       context.moveTo(
-        startX + (isHorizontal ? wobble : startJitter),
-        startY + (isHorizontal ? startJitter : 0)
+        startX + (isHorizontal ? wobble : startJitter) + grainOffset,
+        startY + (isHorizontal ? startJitter : 0) - grainOffset * 0.35
       );
       context.lineTo(
-        endX + (isHorizontal ? wobble : endJitter),
-        endY + (isHorizontal ? endJitter : 0)
+        endX + (isHorizontal ? wobble : endJitter) - grainOffset * 0.4,
+        endY + (isHorizontal ? endJitter : 0) + grainOffset * 0.25
       );
     }
   }
 
-  function drawContour(threshold, color, lineWidth, gridSize) {
+  function drawContour(threshold, color, lineWidth, gridSize, options = {}) {
+    const textureScale = options.textureScale || 1;
+    const maskRects = options.maskRects || [];
     const edgePairs = {
       1: [[3, 0]],
       2: [[0, 1]],
@@ -404,7 +470,7 @@ function initBlobTracker() {
         ];
 
         pairs.forEach(([from, to]) => {
-          drawBrokenSegment(edgePoints[from], edgePoints[to], gridSize);
+          drawBrokenSegment(edgePoints[from], edgePoints[to], gridSize, textureScale, maskRects);
         });
       }
     }
@@ -413,12 +479,50 @@ function initBlobTracker() {
     context.lineWidth = lineWidth + Math.sin(time * 0.62) * 0.28;
     context.lineCap = "square";
     context.lineJoin = "miter";
-    context.setLineDash([10 + Math.sin(time * 0.34) * 3, 8 + Math.cos(time * 0.48) * 4]);
+    context.shadowColor = options.shadowColor || "transparent";
+    context.shadowBlur = options.shadowBlur || 0;
+    context.globalAlpha = options.alpha || 1;
+    context.setLineDash(options.dash || [10 + Math.sin(time * 0.34) * 3, 8 + Math.cos(time * 0.48) * 4]);
     context.stroke();
+    context.globalAlpha = 1;
+    context.shadowBlur = 0;
     context.setLineDash([]);
   }
 
-  function drawTrackedBoxes() {
+  function drawLineGrain(maskRects = []) {
+    const mobileTracker = isMobileTracker();
+    const grainCount = mobileTracker ? 14 : 34;
+
+    context.save();
+
+    blobPoints.forEach((point, pointIndex) => {
+      for (let index = 0; index < grainCount; index += 1) {
+        const seed = pointIndex * 37 + index * 11;
+        const noise = glitchNoise(point.x + index * 13, point.y - index * 7, seed);
+
+        if (noise < 0.22) {
+          continue;
+        }
+
+        const angle = noise * Math.PI * 2 + index;
+        const radius = point.radius * (0.28 + ((index * 29) % 100) / 100 * 0.82);
+        const x = point.x + Math.cos(angle) * radius;
+        const y = point.y + Math.sin(angle) * radius;
+        const alpha = (mobileTracker ? 0.04 : 0.07) + noise * (mobileTracker ? 0.035 : 0.055);
+
+        if (isPointMasked(x, y, maskRects)) {
+          continue;
+        }
+
+        context.fillStyle = `rgba(253, 28, 3, ${alpha})`;
+        context.fillRect(x, y, mobileTracker ? 1 : 1.4, 1);
+      }
+    });
+
+    context.restore();
+  }
+
+  function drawTrackedBoxes(maskRects = []) {
     const mobileTracker = isMobileTracker();
 
     context.save();
@@ -427,6 +531,14 @@ function initBlobTracker() {
 
     trackedElements.forEach(({ rect, element }, index) => {
       const isHot = element === highlightedElement;
+      if (!isHot) {
+        return;
+      }
+
+      if (isPointMasked(rect.left + rect.width / 2, rect.top + rect.height / 2, maskRects)) {
+        return;
+      }
+
       const lineDrift = glitchNoise(rect.left, rect.top, index) * 3;
       const alpha = isHot ? (mobileTracker ? 0.34 : 0.48) : (mobileTracker ? 0.05 : 0.1);
 
@@ -479,13 +591,30 @@ function initBlobTracker() {
     rebuildBlobPoints();
     updateHighlightedElement();
     context.clearRect(0, 0, width, height);
+    const maskRects = getAnimationMaskRects();
     drawContour(
-      0.92 + Math.sin(time * 0.16) * 0.035,
-      mobileTracker ? "rgba(253, 28, 3, 0.7)" : "rgba(253, 28, 3, 0.88)",
-      mobileTracker ? 1.4 : 2,
-      mobileTracker ? 40 : 28
+      1.02 + Math.sin(time * 0.12) * 0.025,
+      mobileTracker ? "rgba(253, 28, 3, 0.18)" : "rgba(253, 28, 3, 0.24)",
+      mobileTracker ? 3.2 : 4.8,
+      mobileTracker ? 62 : 52,
+      {
+        alpha: mobileTracker ? 0.45 : 0.58,
+        dash: [18, 14],
+        shadowBlur: mobileTracker ? 7 : 12,
+        shadowColor: "rgba(253, 28, 3, 0.42)",
+        textureScale: 1.4,
+        maskRects,
+      }
     );
-    drawTrackedBoxes();
+    drawContour(
+      1.08 + Math.sin(time * 0.16) * 0.025,
+      mobileTracker ? "rgba(253, 28, 3, 0.62)" : "rgba(253, 28, 3, 0.82)",
+      mobileTracker ? 1.25 : 1.75,
+      mobileTracker ? 58 : 48,
+      { maskRects }
+    );
+    drawLineGrain(maskRects);
+    drawTrackedBoxes(maskRects);
 
     window.requestAnimationFrame(render);
   }
