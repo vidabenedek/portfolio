@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vidabenedek.github.io/portfolio/sitemap.xml
+Sitemap: https://vidabenedek.com/sitemap.xml

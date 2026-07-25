@@ -8,7 +8,7 @@ This repository now deploys automatically to GitHub Pages from the `main` branch
 
 Expected site URL:
 
-`https://vidabenedek.github.io/portfolio/`
+`https://vidabenedek.com/`
 
 ## One-time GitHub setup
 

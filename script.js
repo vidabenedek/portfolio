@@ -12,94 +12,33 @@ const showreelVideo = document.querySelector("[data-showreel-video]");
 const showreelPlayButton = document.querySelector("[data-showreel-toggle-play]");
 const showreelMuteButton = document.querySelector("[data-showreel-toggle-mute]");
 const showreelFullscreenButton = document.querySelector("[data-showreel-fullscreen]");
+const showreelStatus = document.querySelector("[data-showreel-status]");
 const blobTracker = document.querySelector("[data-blob-tracker]");
-
-if ("scrollRestoration" in history) {
-  history.scrollRestoration = "manual";
-}
+const lazyVideos = document.querySelectorAll("[data-lazy-video]");
+const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+const mobilePointerQuery = window.matchMedia("(max-width: 760px), (hover: none) and (pointer: coarse)");
 
 // All random music-video reference frames used by this section live here.
 const clipFrameDirectory = randomGallery && randomGallery.dataset.referenceFolder
   ? randomGallery.dataset.referenceFolder
-  : "clip-stills/";
-const clipFrameFiles = [
-  "Képernyőfotó 2026-04-17 - 16.23.04.png",
-  "Képernyőfotó 2026-04-17 - 16.23.40.png",
-  "Képernyőfotó 2026-04-17 - 16.23.55.png",
-  "Képernyőfotó 2026-04-17 - 16.24.25.png",
-  "Képernyőfotó 2026-04-17 - 16.25.24.png",
-  "Képernyőfotó 2026-04-17 - 16.25.41.png",
-  "Képernyőfotó 2026-04-17 - 16.25.53.png",
-  "Képernyőfotó 2026-04-17 - 16.26.36.png",
-  "Képernyőfotó 2026-04-17 - 16.28.06.png",
-  "Képernyőfotó 2026-04-17 - 16.28.13.png",
-  "Képernyőfotó 2026-04-19 - 11.01.32.png",
-  "Képernyőfotó 2026-04-19 - 11.02.04.png",
-  "Képernyőfotó 2026-04-19 - 11.02.32.png",
-  "Képernyőfotó 2026-04-19 - 11.03.11.png",
-  "Képernyőfotó 2026-04-19 - 11.04.03.png",
-  "Képernyőfotó 2026-04-19 - 11.04.18.png",
-  "Képernyőfotó 2026-04-19 - 11.05.03.png",
-  "Képernyőfotó 2026-04-19 - 11.05.17.png",
-  "Képernyőfotó 2026-04-19 - 11.05.43.png",
-  "Képernyőfotó 2026-04-19 - 11.06.01.png",
-  "Képernyőfotó 2026-04-19 - 11.06.14.png",
-  "Képernyőfotó 2026-04-19 - 11.06.45.png",
-  "Képernyőfotó 2026-04-19 - 11.06.59.png",
-  "Still 2025-10-06 150146_1.1.12.jpg",
-  "Still 2025-10-06 150146_1.1.16.jpg",
-  "Still 2025-10-06 150146_1.1.27.jpg",
-  "Still 2025-10-06 150146_1.1.35.jpg",
-  "Still 2025-10-06 150146_1.1.37.jpg",
-  "Still 2026-04-17 161445_1.1.1.jpg",
-  "Still 2026-04-17 161445_1.1.10.jpg",
-  "Still 2026-04-17 161445_1.1.12.jpg",
-  "Still 2026-04-17 161445_1.1.13.jpg",
-  "Still 2026-04-17 161445_1.1.14.jpg",
-  "Still 2026-04-17 161445_1.1.16.jpg",
-  "Still 2026-04-17 161445_1.1.18.jpg",
-  "Still 2026-04-17 161445_1.1.19.jpg",
-  "Still 2026-04-17 161445_1.1.2.jpg",
-  "Still 2026-04-17 161445_1.1.20.jpg",
-  "Still 2026-04-17 161445_1.1.21.jpg",
-  "Still 2026-04-17 161445_1.1.22.jpg",
-  "Still 2026-04-17 161445_1.1.25.jpg",
-  "Still 2026-04-17 161445_1.1.26.jpg",
-  "Still 2026-04-17 161445_1.1.27.jpg",
-  "Still 2026-04-17 161445_1.1.3.jpg",
-  "Still 2026-04-17 161445_1.1.5.jpg",
-  "Still 2026-04-17 161445_1.1.7.jpg",
-  "Still 2026-04-17 161445_1.1.8.jpg",
-  "lenkke-frame-001.jpg",
-  "lenkke-frame-002.jpg",
-  "lenkke-frame-003.jpg",
-  "lenkke-frame-004.jpg",
-  "lenkke-frame-005.jpg",
-  "lenkke-frame-006.jpg",
-  "lenkke-frame-007.jpg",
-  "lenkke-frame-008.jpg",
-  "lenkke-frame-009.jpg",
-  "lenkke-frame-010.jpg",
-  "lenkke-frame-011.jpg",
-  "lenkke-frame-012.jpg",
-  "lenkke-frame-013.jpg",
-  "lenkke-frame-014.jpg",
-  "lenkke-frame-015.jpg",
-  "lenkke-frame-016.jpg",
-  "lenkke-frame-017.jpg",
-];
+  : "clip-stills-mobile/";
+const clipFrameFiles = Array.from(
+  { length: 64 },
+  (_, index) => `frame-${String(index + 1).padStart(3, "0")}.jpg`
+);
 const clipFrameSources = clipFrameFiles.map((fileName) => `${clipFrameDirectory}${fileName}`);
-const clipFrameMobileSources = clipFrameFiles.map((_, index) => {
-  const frameNumber = String(index + 1).padStart(3, "0");
-  return `clip-stills-mobile/frame-${frameNumber}.jpg`;
-});
 
 let currentFrameSelection = [];
 let isSwitchingFrames = false;
 let isHeroTicking = false;
 
 function initBlobTracker() {
-  if (!blobTracker || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (
+    !blobTracker ||
+    reducedMotionQuery.matches ||
+    mobilePointerQuery.matches ||
+    (navigator.connection && navigator.connection.saveData)
+  ) {
     return;
   }
 
@@ -287,7 +226,7 @@ function initBlobTracker() {
   }
 
   function getAnimationMaskRects() {
-    return Array.from(document.querySelectorAll("[data-showreel-video]"))
+    return Array.from(document.querySelectorAll("[data-animation-mask]"))
       .map((element) => element.getBoundingClientRect())
       .filter((rect) =>
         rect.width > 0 &&
@@ -581,7 +520,7 @@ function initBlobTracker() {
 
     const mobileTracker = isMobileTracker();
 
-    if (mobileTracker && now - lastRenderTime < 34) {
+    if (now - lastRenderTime < (mobileTracker ? 50 : 34)) {
       window.requestAnimationFrame(render);
       return;
     }
@@ -652,10 +591,6 @@ function initBlobTracker() {
 }
 
 function markPageReady() {
-  if (!window.location.hash) {
-    window.scrollTo(0, 0);
-  }
-
   body.classList.remove("is-loading");
   body.classList.add("is-ready");
 }
@@ -675,6 +610,7 @@ function setMenuOpen(isOpen) {
 
   siteHeader.classList.toggle("is-menu-open", isOpen);
   menuToggle.setAttribute("aria-expanded", String(isOpen));
+  menuToggle.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
 }
 
 if (menuToggle) {
@@ -711,8 +647,8 @@ const panelObserver = new IntersectionObserver(
     });
   },
   {
-    threshold: 0.18,
-    rootMargin: "0px 0px -10% 0px",
+    threshold: 0.01,
+    rootMargin: "0px 0px -5% 0px",
   }
 );
 
@@ -744,7 +680,7 @@ sections.forEach((section) => {
 });
 
 window.addEventListener("scroll", () => {
-  if (!heroMedia) {
+  if (!heroMedia || reducedMotionQuery.matches) {
     return;
   }
 
@@ -780,14 +716,10 @@ function getFrameLabel(source) {
     .replace(/\s+/g, " ")
     .trim();
 
-  return `Clip still ${readableName}`;
+  return `Music video still ${readableName} from Vida Benedek's directing portfolio`;
 }
 
 function getClipFrameSources() {
-  if (window.matchMedia("(max-width: 760px)").matches) {
-    return clipFrameMobileSources;
-  }
-
   return clipFrameSources;
 }
 
@@ -845,8 +777,14 @@ function randomizeFrames() {
 }
 
 if (frameButtons.length) {
-  currentFrameSelection = shuffleArray(getClipFrameSources()).slice(0, frameButtons.length);
-  applyFrameSelection(currentFrameSelection);
+  currentFrameSelection = getClipFrameSources().slice(0, frameButtons.length);
+
+  frameButtons.forEach((button, index) => {
+    const image = button.querySelector("img");
+    if (image) {
+      button.setAttribute("aria-label", `Show another random music video frame. Current image: ${image.alt}`);
+    }
+  });
 
   frameButtons.forEach((button) => {
     button.addEventListener("click", randomizeFrames);
@@ -857,6 +795,63 @@ if (frameButtons.length) {
   }
 }
 
+function loadVideoSource(video) {
+  if (!video || video.dataset.sourceLoaded === "true") {
+    return;
+  }
+
+  if (video.dataset.src) {
+    video.src = video.dataset.src;
+  }
+
+  video.querySelectorAll("source[data-src]").forEach((source) => {
+    source.src = source.dataset.src;
+  });
+
+  video.dataset.sourceLoaded = "true";
+  video.load();
+}
+
+function canAutoplayVideo(video) {
+  const isDesktopOnly = video.dataset.videoAutoplay === "desktop";
+
+  return (
+    (!isDesktopOnly || window.matchMedia("(min-width: 761px)").matches) &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+    !(navigator.connection && navigator.connection.saveData)
+  );
+}
+
+if (lazyVideos.length) {
+  const videoObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target;
+
+        if (!entry.isIntersecting) {
+          video.pause();
+          return;
+        }
+
+        loadVideoSource(video);
+
+        if (video.hasAttribute("data-video-autoplay") && canAutoplayVideo(video)) {
+          const playback = video.play();
+          if (playback && typeof playback.catch === "function") {
+            playback.catch(() => {});
+          }
+        }
+      });
+    },
+    {
+      rootMargin: window.matchMedia("(max-width: 760px)").matches ? "0px" : "240px 0px",
+      threshold: 0.01,
+    }
+  );
+
+  lazyVideos.forEach((video) => videoObserver.observe(video));
+}
+
 function syncShowreelControls() {
   if (!showreelVideo) {
     return;
@@ -864,31 +859,29 @@ function syncShowreelControls() {
 
   if (showreelPlayButton) {
     showreelPlayButton.textContent = showreelVideo.paused ? "PLAY" : "PAUSE";
+    showreelPlayButton.setAttribute("aria-label", showreelVideo.paused ? "Play showreel" : "Pause showreel");
+    showreelPlayButton.setAttribute("aria-pressed", String(!showreelVideo.paused));
   }
 
   if (showreelMuteButton) {
-    showreelMuteButton.textContent = showreelVideo.muted ? "SOUND OFF" : "SOUND ON";
+    showreelMuteButton.textContent = showreelVideo.muted ? "SOUND ON" : "SOUND OFF";
+    showreelMuteButton.setAttribute("aria-label", showreelVideo.muted ? "Turn showreel sound on" : "Turn showreel sound off");
+    showreelMuteButton.setAttribute("aria-pressed", String(!showreelVideo.muted));
+  }
+
+  if (showreelStatus) {
+    showreelStatus.textContent = showreelVideo.paused ? "READY TO PLAY" : "PLAYING NOW";
   }
 }
 
 if (showreelVideo) {
   syncShowreelControls();
 
-  const canAutoplayShowreel =
-    window.matchMedia("(min-width: 761px)").matches &&
-    !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
-    !(navigator.connection && navigator.connection.saveData);
-
-  if (canAutoplayShowreel) {
-    const startPlayback = showreelVideo.play();
-    if (startPlayback && typeof startPlayback.catch === "function") {
-      startPlayback.catch(() => {});
-    }
-  }
-
   if (showreelPlayButton) {
     showreelPlayButton.addEventListener("click", async () => {
       if (showreelVideo.paused) {
+        loadVideoSource(showreelVideo);
+
         try {
           await showreelVideo.play();
         } catch (error) {
@@ -918,6 +911,8 @@ if (showreelVideo) {
 
       if (showreelVideo.requestFullscreen) {
         await showreelVideo.requestFullscreen();
+      } else if (showreelVideo.webkitEnterFullscreen) {
+        showreelVideo.webkitEnterFullscreen();
       }
     });
   }

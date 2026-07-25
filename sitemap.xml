@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+  xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+>
   <url>
-    <loc>https://vidabenedek.github.io/portfolio/</loc>
-    <lastmod>2026-07-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <loc>https://vidabenedek.com/</loc>
+    <lastmod>2026-07-25</lastmod>
+    <image:image>
+      <image:loc>https://vidabenedek.com/hero-background.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://vidabenedek.com/optimized/lenkke-1280.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://vidabenedek.com/optimized/videoclip-001-1280.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://vidabenedek.com/optimized/videoclip-002-1280.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://vidabenedek.com/optimized/videoclip-003-1280.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://vidabenedek.com/optimized/videoclip-005-1280.jpg</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://vidabenedek.com/showreel/</loc>
+    <lastmod>2026-07-25</lastmod>
+    <video:video>
+      <video:thumbnail_loc>https://vidabenedek.com/optimized/hero-background-1200.jpg</video:thumbnail_loc>
+      <video:title>Vida Benedek Director Showreel 2025</video:title>
+      <video:description>Selected commercials, music videos, short films, and visual work directed by Vida Benedek.</video:description>
+      <video:content_loc>https://vidabenedek.com/VIDA_BENEDEK_SHOWREEL_2025.mp4</video:content_loc>
+      <video:publication_date>2026-04-19</video:publication_date>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
   </url>
 </urlset>

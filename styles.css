@@ -15,6 +15,11 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+section[id] {
+  scroll-margin-top: 96px;
 }
 
 body {
@@ -118,6 +123,7 @@ body.is-ready .page-loader {
   gap: 24px;
   padding: 18px 0;
   backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .site-header::after {
@@ -489,6 +495,53 @@ h2 {
   letter-spacing: -0.06em;
 }
 
+.watch-page-heading h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 6vw, 5.5rem);
+  line-height: 0.94;
+  letter-spacing: -0.06em;
+  text-shadow:
+    0 0 7px rgba(253, 28, 3, 0.42),
+    0 0 18px rgba(253, 28, 3, 0.24),
+    1px 0 1px rgba(255, 58, 37, 0.18);
+}
+
+.watch-page {
+  padding-bottom: 72px;
+}
+
+.watch-page-video {
+  margin-top: 24px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #010204;
+}
+
+.watch-page-video video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.watch-page-copy {
+  display: grid;
+  gap: 16px;
+  max-width: 920px;
+  padding-top: 24px;
+  font-size: clamp(1.1rem, 2vw, 1.55rem);
+  line-height: 1.3;
+}
+
+.watch-page-copy p {
+  margin: 0;
+}
+
+.watch-page-copy .button-link {
+  justify-self: start;
+  margin-top: 8px;
+}
+
 h2,
 .clip-lab h4,
 .work-card h4,
@@ -619,6 +672,23 @@ h2,
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   padding-top: 18px;
+}
+
+.videoclip-banner {
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  margin-top: 18px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #06080c;
+}
+
+.videoclip-banner video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
 }
 
 .videoclip-shot {
@@ -931,20 +1001,27 @@ h2,
 
 @media (max-width: 760px) {
   .page-shell {
-    width: min(calc(100% - 20px - env(safe-area-inset-left) - env(safe-area-inset-right)), var(--max-width));
+    width: min(calc(100% - 20px), var(--max-width));
     padding-top: max(10px, env(safe-area-inset-top));
   }
 
   .blob-tracker {
-    opacity: 0.42;
+    display: none;
+  }
+
+  .page-loader {
+    transition-duration: 0.15s;
   }
 
   .site-header {
+    top: env(safe-area-inset-top);
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
     gap: 12px;
     padding: 12px 0;
+    background: rgba(3, 5, 9, 0.9);
+    box-shadow: 0 10px 28px rgba(3, 5, 9, 0.32);
   }
 
   .menu-toggle {
@@ -974,6 +1051,9 @@ h2,
     gap: 8px;
     grid-column: 1 / -1;
     padding: 8px 0 4px;
+    max-height: calc(100dvh - 82px - env(safe-area-inset-top));
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .site-header.is-menu-open .site-nav {
@@ -989,6 +1069,11 @@ h2,
   .hero {
     min-height: calc(100svh - 92px);
     padding: 28px 18px 24px;
+  }
+
+  .hero-media {
+    background-position: 58% center;
+    will-change: auto;
   }
 
   .panel {
@@ -1009,6 +1094,13 @@ h2,
   h2 {
     font-size: clamp(2.6rem, 16vw, 4.2rem);
     letter-spacing: -0.04em;
+    overflow-wrap: anywhere;
+  }
+
+  .watch-page-heading h1 {
+    font-size: clamp(2.35rem, 12vw, 3.8rem);
+    letter-spacing: -0.04em;
+    overflow-wrap: anywhere;
   }
 
   h2,
@@ -1038,6 +1130,10 @@ h2,
 
   .showreel-stage::before {
     inset: 10px;
+  }
+
+  .showreel-stage {
+    padding: 10px;
   }
 
   .showreel-controls {
@@ -1083,7 +1179,7 @@ h2,
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 46px;
+    min-height: 48px;
     text-align: center;
   }
 
@@ -1093,11 +1189,42 @@ h2,
   }
 
   .content-section {
-    padding-top: 62px;
+    padding-top: 56px;
   }
 
   .work-cards {
     grid-template-columns: 1fr;
+  }
+
+  .videoclip-banner {
+    aspect-ratio: 16 / 9;
+  }
+
+  .clip-lab {
+    padding: 16px;
+  }
+
+  .clip-lab-grid {
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .work-card {
+    min-height: 150px;
+    padding: 16px;
+  }
+
+  .watch-page {
+    padding-bottom: calc(48px + env(safe-area-inset-bottom));
+  }
+
+  .watch-page-video {
+    margin-top: 18px;
+  }
+
+  .watch-page-copy {
+    padding-top: 20px;
+    font-size: 1.08rem;
   }
 
   .clip-frame-large,
@@ -1125,6 +1252,26 @@ h2,
     flex-direction: column;
     gap: 6px;
     padding: 12px;
+  }
+
+  .page-shell {
+    width: min(calc(100% - 16px), var(--max-width));
+  }
+
+  .hero {
+    padding-inline: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .site-mark {
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+  }
+
+  .menu-toggle {
+    min-width: 72px;
+    padding-inline: 10px;
   }
 }
 
