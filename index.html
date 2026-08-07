@@ -46,7 +46,7 @@
     href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&amp;display=swap"
     rel="stylesheet"
   >
-  <link rel="stylesheet" href="styles.css?v=20260725-video-ratio">
+  <link rel="stylesheet" href="styles.css?v=20260807-responsive-particles">
   <noscript>
     <style>
       .page-loader { display: none; }
@@ -195,8 +195,8 @@
         <div class="hero-copy">
           <p class="eyebrow">DIRECTOR / CREATIVE DIRECTOR</p>
           <h1>
-            <span class="name-line">VIDA</span>
-            <span class="name-line no-break">BENEDEK</span>
+            <span class="name-line" data-glitch-text="VIDA">VIDA</span>
+            <span class="name-line no-break" data-glitch-text="BENEDEK">BENEDEK</span>
           </h1>
           <p class="hero-text">
             BUDAPEST-BASED DIRECTOR: DIRECTING COMMERCIALS, MUSIC VIDEOS, AND SHORT FILMS - BUILDING VISUAL WORLDS BETWEEN AI AND ANALOG.
@@ -272,10 +272,22 @@
                 data-lazy-video
                 data-video-autoplay
                 data-animation-mask
+                data-music-video
               >
                 <source data-src="optimized/vida-benedek-music-video-reel-2026-mobile.mp4" type="video/mp4" media="(max-width: 760px)">
                 <source data-src="optimized/vida-benedek-music-video-reel-2026.mp4" type="video/mp4">
               </video>
+              <button
+                type="button"
+                class="videoclip-fullscreen"
+                aria-label="View music video fullscreen"
+                title="Fullscreen"
+                data-music-video-fullscreen
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" />
+                </svg>
+              </button>
             </div>
 
             <div class="videoclip-gallery">
@@ -425,24 +437,19 @@
             ></video>
 
             <div class="showreel-overlay" aria-hidden="true">
-              <span data-showreel-status>READY TO PLAY</span>
               <span>DIRECTOR'S SHOWREEL</span>
             </div>
-          </div>
-
-          <div class="showreel-controls">
-            <button type="button" class="showreel-control" aria-label="Play showreel" aria-pressed="false" data-showreel-toggle-play>
-              PLAY
+            <button
+              type="button"
+              class="videoclip-fullscreen"
+              aria-label="View showreel fullscreen"
+              title="Fullscreen"
+              data-showreel-fullscreen
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" />
+              </svg>
             </button>
-            <button type="button" class="showreel-control" aria-label="Turn showreel sound on" aria-pressed="false" data-showreel-toggle-mute>
-              SOUND ON
-            </button>
-            <button type="button" class="showreel-control" data-showreel-fullscreen>
-              FULLSCREEN
-            </button>
-            <a class="showreel-control" href="showreel/">
-              SHOWREEL PAGE
-            </a>
           </div>
         </div>
       </section>
@@ -509,6 +516,6 @@
     </main>
   </div>
 
-  <script src="script.js?v=20260725-mobile-seo"></script>
+  <script src="script.js?v=20260807-responsive-particles"></script>
 </body>
 </html>

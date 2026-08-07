@@ -9,12 +9,11 @@ const randomGallery = document.querySelector("[data-random-gallery]");
 const frameButtons = document.querySelectorAll("[data-frame-trigger]");
 const randomizeFramesButton = document.querySelector("[data-randomize-frames]");
 const showreelVideo = document.querySelector("[data-showreel-video]");
-const showreelPlayButton = document.querySelector("[data-showreel-toggle-play]");
-const showreelMuteButton = document.querySelector("[data-showreel-toggle-mute]");
 const showreelFullscreenButton = document.querySelector("[data-showreel-fullscreen]");
-const showreelStatus = document.querySelector("[data-showreel-status]");
 const blobTracker = document.querySelector("[data-blob-tracker]");
 const lazyVideos = document.querySelectorAll("[data-lazy-video]");
+const musicVideo = document.querySelector("[data-music-video]");
+const musicVideoFullscreenButton = document.querySelector("[data-music-video-fullscreen]");
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 const mobilePointerQuery = window.matchMedia("(max-width: 760px), (hover: none) and (pointer: coarse)");
 
@@ -595,10 +594,238 @@ function markPageReady() {
   body.classList.add("is-ready");
 }
 
+function initHeroPixelate() {
+  const nameLines = Array.from(document.querySelectorAll(".name-line[data-glitch-text]"));
+
+  if (!nameLines.length) {
+    return;
+  }
+
+  if (reducedMotionQuery.matches) {
+    nameLines.forEach((line) => line.classList.add("is-pixelated"));
+    return;
+  }
+
+  nameLines.forEach((line) => {
+    const rect = line.getBoundingClientRect();
+    const style = window.getComputedStyle(line);
+    const fontSize = Number.parseFloat(style.fontSize);
+    const width = Math.ceil(window.innerWidth);
+    const height = Math.ceil(window.innerHeight);
+    const canvas = document.createElement("canvas");
+    const source = document.createElement("canvas");
+    const outputContext = canvas.getContext("2d");
+    const sourceContext = source.getContext("2d", { willReadFrequently: true });
+
+    if (!outputContext || !sourceContext || !width || !height) {
+      line.classList.add("is-pixelated");
+      return;
+    }
+
+    canvas.className = "pixelate-text-canvas";
+    canvas.width = width;
+    canvas.height = height;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    canvas.style.left = "0";
+    canvas.style.top = "0";
+    canvas.style.visibility = "hidden";
+    source.width = width;
+    source.height = height;
+
+    sourceContext.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    sourceContext.textBaseline = "alphabetic";
+    sourceContext.fillStyle = style.color;
+
+    if ("letterSpacing" in sourceContext) {
+      sourceContext.letterSpacing = style.letterSpacing;
+    }
+
+    sourceContext.fillText(line.textContent.trim(), rect.left, rect.top + rect.height * 0.82);
+
+    const sampleStep = Math.max(2, Math.round(fontSize / 55));
+    const targetPoints = [];
+
+    const sampleLeft = Math.max(0, Math.floor(rect.left));
+    const sampleRight = Math.min(width, Math.ceil(rect.right));
+    const sampleTop = Math.max(0, Math.floor(rect.top));
+    const sampleBottom = Math.min(height, Math.ceil(rect.bottom));
+    const sampleWidth = Math.max(1, sampleRight - sampleLeft);
+    const sampleHeight = Math.max(1, sampleBottom - sampleTop);
+    const sourcePixels = sourceContext.getImageData(
+      sampleLeft,
+      sampleTop,
+      sampleWidth,
+      sampleHeight
+    ).data;
+
+    for (let y = sampleTop; y < sampleBottom; y += sampleStep) {
+      for (let x = sampleLeft; x < sampleRight; x += sampleStep) {
+        const localX = x - sampleLeft;
+        const localY = y - sampleTop;
+
+        if (sourcePixels[(localY * sampleWidth + localX) * 4 + 3] > 96) {
+          targetPoints.push({ x, y });
+        }
+      }
+    }
+
+    const isMobileAnimation = mobilePointerQuery.matches;
+    const isLowPowerDevice =
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+      (navigator.deviceMemory && navigator.deviceMemory <= 4);
+    const particleLimit = isMobileAnimation
+      ? (isLowPowerDevice ? 2200 : 3400)
+      : (isLowPowerDevice ? 4200 : 7000);
+    const frameInterval = isMobileAnimation ? (isLowPowerDevice ? 1000 / 24 : 1000 / 30) : 0;
+    const pointSkip = Math.max(1, Math.ceil(targetPoints.length / particleLimit));
+    const particles = targetPoints
+      .filter((_, pointIndex) => pointIndex % pointSkip === 0)
+      .map((target) => {
+        const entryEdge = Math.floor(Math.random() * 4);
+        let originX;
+        let originY;
+
+        if (entryEdge === 0) {
+          originX = Math.random() * width;
+          originY = -8 - Math.random() * height * 0.12;
+        } else if (entryEdge === 1) {
+          originX = width + 8 + Math.random() * width * 0.12;
+          originY = Math.random() * height;
+        } else if (entryEdge === 2) {
+          originX = Math.random() * width;
+          originY = height + 8 + Math.random() * height * 0.12;
+        } else {
+          originX = -8 - Math.random() * width * 0.12;
+          originY = Math.random() * height;
+        }
+
+        const normalizedX = target.x / width;
+        const normalizedY = target.y / height;
+        const flowAngle =
+          Math.sin(normalizedX * 11.7 + normalizedY * 7.1) * Math.PI
+          + Math.cos(normalizedY * 13.3 - normalizedX * 5.4) * 1.4;
+        const flowStrength = width * (0.08 + Math.random() * 0.34);
+        const distanceX = target.x - originX;
+        const distanceY = target.y - originY;
+        const distance = Math.max(1, Math.hypot(distanceX, distanceY));
+
+        return {
+          targetX: target.x,
+          targetY: target.y,
+          offsetX: originX - target.x + Math.cos(flowAngle) * flowStrength * 0.16,
+          offsetY: originY - target.y + Math.sin(flowAngle) * flowStrength * 0.16,
+          waveX: width * (0.008 + Math.random() * 0.045),
+          waveY: height * (0.018 + Math.random() * 0.09),
+          frequencyX: 0.8 + Math.random() * 3.6,
+          frequencyY: 0.7 + Math.random() * 4.1,
+          phase: Math.random() * Math.PI * 2,
+          phaseTwo: Math.random() * Math.PI * 2,
+          perpendicularX: -distanceY / distance,
+          perpendicularY: distanceX / distance,
+          meander: width * (0.018 + Math.random() * 0.075),
+          streamFrequency: 0.8 + Math.random() * 2.8,
+          arrivalDelay: Math.random() * 0.34,
+          settlePower: 2.2 + Math.random() * 2.4,
+        };
+      });
+
+    const duration = 2280;
+    const startDelay = 420;
+    let startTime = 0;
+    let lastFrameTime = 0;
+
+    document.body.appendChild(canvas);
+    line.classList.add("is-pixelating");
+
+    function renderPixelate(timestamp) {
+      if (!startTime) {
+        startTime = timestamp + startDelay;
+      }
+
+      if (timestamp < startTime) {
+        window.requestAnimationFrame(renderPixelate);
+        return;
+      }
+
+      if (document.hidden) {
+        line.classList.remove("is-pixelating", "is-settling");
+        line.classList.add("is-pixelated");
+        canvas.remove();
+        return;
+      }
+
+      if (frameInterval && timestamp - lastFrameTime < frameInterval) {
+        window.requestAnimationFrame(renderPixelate);
+        return;
+      }
+
+      lastFrameTime = timestamp;
+
+      canvas.style.visibility = "visible";
+      const progress = Math.min(1, (timestamp - startTime) / duration);
+      const finalBlendRaw = Math.max(0, Math.min(1, (progress - 0.72) / 0.28));
+      const finalBlend = finalBlendRaw * finalBlendRaw * (3 - 2 * finalBlendRaw);
+
+      if (finalBlend > 0) {
+        line.classList.add("is-settling");
+      }
+
+      outputContext.clearRect(0, 0, width, height);
+      outputContext.imageSmoothingEnabled = false;
+      outputContext.fillStyle = "#fd1c03";
+      outputContext.globalAlpha = Math.pow(1 - finalBlend, 1.35);
+
+      const timeSpin = progress * Math.PI * 2;
+
+      particles.forEach((particle) => {
+        const particleProgress = Math.max(
+          0,
+          Math.min(1, (progress - particle.arrivalDelay) / (1 - particle.arrivalDelay))
+        );
+        const settle = 1 - Math.pow(1 - particleProgress, particle.settlePower);
+        const chaos = 1 - settle;
+        const streamWave = Math.sin(
+          particleProgress * Math.PI * 2 * particle.streamFrequency + particle.phase
+        ) * particle.meander * chaos;
+        const flowingX = particle.offsetX * chaos
+          + Math.sin(timeSpin * particle.frequencyX + particle.phase) * particle.waveX * chaos
+          + particle.perpendicularX * streamWave;
+        const flowingY = particle.offsetY * chaos
+          + Math.cos(timeSpin * particle.frequencyY + particle.phaseTwo) * particle.waveY * chaos
+          + particle.perpendicularY * streamWave;
+        const microNoiseX = Math.sin(timeSpin * 9.7 + particle.phaseTwo * 2.1) * 2.5 * chaos;
+        const microNoiseY = Math.cos(timeSpin * 8.3 + particle.phase * 2.4) * 2.5 * chaos;
+        const x = particle.targetX + flowingX + microNoiseX;
+        const y = particle.targetY + flowingY + microNoiseY;
+
+        outputContext.fillRect(Math.round(x), Math.round(y), 1, 1);
+      });
+
+      outputContext.globalAlpha = 1;
+
+      if (progress < 1) {
+        window.requestAnimationFrame(renderPixelate);
+        return;
+      }
+
+      line.classList.remove("is-pixelating", "is-settling");
+      line.classList.add("is-pixelated");
+      canvas.remove();
+    }
+
+    window.requestAnimationFrame(renderPixelate);
+  });
+}
+
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", markPageReady, { once: true });
+  document.addEventListener("DOMContentLoaded", () => {
+    markPageReady();
+    document.fonts.ready.then(initHeroPixelate);
+  }, { once: true });
 } else {
   markPageReady();
+  document.fonts.ready.then(initHeroPixelate);
 }
 
 initBlobTracker();
@@ -833,6 +1060,15 @@ if (lazyVideos.length) {
           return;
         }
 
+        const deferDesktopVideoOnMobile =
+          video.dataset.videoAutoplay === "desktop" &&
+          window.matchMedia("(max-width: 760px)").matches &&
+          video.dataset.sourceLoaded !== "true";
+
+        if (deferDesktopVideoOnMobile) {
+          return;
+        }
+
         loadVideoSource(video);
 
         if (video.hasAttribute("data-video-autoplay") && canAutoplayVideo(video)) {
@@ -852,58 +1088,16 @@ if (lazyVideos.length) {
   lazyVideos.forEach((video) => videoObserver.observe(video));
 }
 
-function syncShowreelControls() {
-  if (!showreelVideo) {
-    return;
-  }
-
-  if (showreelPlayButton) {
-    showreelPlayButton.textContent = showreelVideo.paused ? "PLAY" : "PAUSE";
-    showreelPlayButton.setAttribute("aria-label", showreelVideo.paused ? "Play showreel" : "Pause showreel");
-    showreelPlayButton.setAttribute("aria-pressed", String(!showreelVideo.paused));
-  }
-
-  if (showreelMuteButton) {
-    showreelMuteButton.textContent = showreelVideo.muted ? "SOUND ON" : "SOUND OFF";
-    showreelMuteButton.setAttribute("aria-label", showreelVideo.muted ? "Turn showreel sound on" : "Turn showreel sound off");
-    showreelMuteButton.setAttribute("aria-pressed", String(!showreelVideo.muted));
-  }
-
-  if (showreelStatus) {
-    showreelStatus.textContent = showreelVideo.paused ? "READY TO PLAY" : "PLAYING NOW";
-  }
-}
-
 if (showreelVideo) {
-  syncShowreelControls();
-
-  if (showreelPlayButton) {
-    showreelPlayButton.addEventListener("click", async () => {
-      if (showreelVideo.paused) {
-        loadVideoSource(showreelVideo);
-
-        try {
-          await showreelVideo.play();
-        } catch (error) {
-          return;
-        }
-      } else {
-        showreelVideo.pause();
-      }
-
-      syncShowreelControls();
-    });
-  }
-
-  if (showreelMuteButton) {
-    showreelMuteButton.addEventListener("click", () => {
-      showreelVideo.muted = !showreelVideo.muted;
-      syncShowreelControls();
-    });
-  }
-
   if (showreelFullscreenButton) {
     showreelFullscreenButton.addEventListener("click", async () => {
+      loadVideoSource(showreelVideo);
+
+      const playback = showreelVideo.play();
+      if (playback && typeof playback.catch === "function") {
+        playback.catch(() => {});
+      }
+
       if (document.fullscreenElement === showreelVideo) {
         await document.exitFullscreen();
         return;
@@ -917,7 +1111,22 @@ if (showreelVideo) {
     });
   }
 
-  showreelVideo.addEventListener("play", syncShowreelControls);
-  showreelVideo.addEventListener("pause", syncShowreelControls);
-  showreelVideo.addEventListener("volumechange", syncShowreelControls);
+}
+
+if (musicVideo && musicVideoFullscreenButton) {
+  musicVideoFullscreenButton.addEventListener("click", async () => {
+    loadVideoSource(musicVideo);
+
+    try {
+      if (document.fullscreenElement === musicVideo) {
+        await document.exitFullscreen();
+      } else if (musicVideo.requestFullscreen) {
+        await musicVideo.requestFullscreen();
+      } else if (musicVideo.webkitEnterFullscreen) {
+        musicVideo.webkitEnterFullscreen();
+      }
+    } catch (error) {
+      // The browser can reject fullscreen requests outside a direct user gesture.
+    }
+  });
 }
