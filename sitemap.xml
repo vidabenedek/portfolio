@@ -2,11 +2,10 @@
 <urlset
   xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-  xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
 >
   <url>
     <loc>https://vidabenedek.com/</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <image:image>
       <image:loc>https://vidabenedek.com/hero-background.jpg</image:loc>
     </image:image>
@@ -28,14 +27,9 @@
   </url>
   <url>
     <loc>https://vidabenedek.com/showreel/</loc>
-    <lastmod>2026-07-25</lastmod>
-    <video:video>
-      <video:thumbnail_loc>https://vidabenedek.com/optimized/hero-background-1200.jpg</video:thumbnail_loc>
-      <video:title>Vida Benedek Director Showreel 2025</video:title>
-      <video:description>Selected commercials, music videos, short films, and visual work directed by Vida Benedek.</video:description>
-      <video:content_loc>https://vidabenedek.com/VIDA_BENEDEK_SHOWREEL_2025.mp4</video:content_loc>
-      <video:publication_date>2026-04-19</video:publication_date>
-      <video:family_friendly>yes</video:family_friendly>
-    </video:video>
+    <lastmod>2026-08-07</lastmod>
+    <image:image>
+      <image:loc>https://vidabenedek.com/optimized/hero-background-1200.jpg</image:loc>
+    </image:image>
   </url>
 </urlset>
