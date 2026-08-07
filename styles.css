@@ -1113,12 +1113,6 @@ h2,
     display: none;
   }
 
-  .content-section,
-  .showreel {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 720px;
-  }
-
   .page-loader {
     transition-duration: 0.15s;
   }

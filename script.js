@@ -16,6 +16,17 @@ const musicVideo = document.querySelector("[data-music-video]");
 const musicVideoFullscreenButton = document.querySelector("[data-music-video-fullscreen]");
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 const mobilePointerQuery = window.matchMedia("(max-width: 760px), (hover: none) and (pointer: coarse)");
+const navigationEntry = typeof performance.getEntriesByType === "function"
+  ? performance.getEntriesByType("navigation")[0]
+  : null;
+const shouldStartAtTop =
+  (!window.location.hash || window.location.hash === "#top") &&
+  (!navigationEntry || navigationEntry.type !== "back_forward");
+
+if (shouldStartAtTop && "scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+  window.scrollTo(0, 0);
+}
 
 // All random music-video reference frames used by this section live here.
 const clipFrameDirectory = randomGallery && randomGallery.dataset.referenceFolder
@@ -590,6 +601,10 @@ function initBlobTracker() {
 }
 
 function markPageReady() {
+  if (shouldStartAtTop) {
+    window.scrollTo(0, 0);
+  }
+
   body.classList.remove("is-loading");
   body.classList.add("is-ready");
 }
@@ -826,6 +841,12 @@ if (document.readyState === "loading") {
 } else {
   markPageReady();
   document.fonts.ready.then(initHeroPixelate);
+}
+
+if (shouldStartAtTop) {
+  window.addEventListener("load", () => {
+    window.requestAnimationFrame(() => window.scrollTo(0, 0));
+  }, { once: true });
 }
 
 initBlobTracker();
