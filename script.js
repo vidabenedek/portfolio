@@ -46,7 +46,6 @@ function initBlobTracker() {
   if (
     !blobTracker ||
     reducedMotionQuery.matches ||
-    mobilePointerQuery.matches ||
     (navigator.connection && navigator.connection.saveData)
   ) {
     return;

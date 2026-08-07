@@ -1110,7 +1110,8 @@ h2,
   }
 
   .blob-tracker {
-    display: none;
+    display: block;
+    opacity: 0.68;
   }
 
   .page-loader {
@@ -1123,7 +1124,7 @@ h2,
     grid-template-columns: 1fr auto;
     align-items: center;
     gap: 12px;
-    padding: 12px 0;
+    padding: 12px;
     background: rgba(3, 5, 9, 0.9);
     box-shadow: 0 10px 28px rgba(3, 5, 9, 0.32);
   }

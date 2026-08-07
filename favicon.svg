@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vida Benedek">
-  <rect width="64" height="64" rx="12" fill="#030509"/>
-  <path d="M12 14h10l10 31L42 14h10L37 52H27L12 14Z" fill="#fd1c03"/>
+  <defs>
+    <filter id="neon" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <path d="M8 10h12l12 36 12-36h12L38 55H26L8 10Z" fill="#ff1f0a" filter="url(#neon)"/>
 </svg>
