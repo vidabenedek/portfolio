@@ -330,39 +330,6 @@ h1 {
   width: fit-content;
 }
 
-.name-line[data-glitch-text] {
-  opacity: 0;
-}
-
-.name-line.is-pixelating {
-  opacity: 1;
-  color: transparent;
-  text-shadow: none;
-  transition: color 620ms ease-out, text-shadow 620ms ease-out;
-}
-
-.name-line.is-pixelating.is-settling {
-  color: var(--text);
-  text-shadow:
-    0 18px 42px var(--shadow),
-    0 0 9px rgba(253, 28, 3, 0.48),
-    0 0 22px rgba(253, 28, 3, 0.28),
-    2px 0 1px rgba(253, 28, 3, 0.2);
-}
-
-.name-line.is-pixelated {
-  opacity: 1;
-}
-
-.pixelate-text-canvas {
-  position: fixed;
-  z-index: 8;
-  display: block;
-  max-width: none;
-  image-rendering: pixelated;
-  pointer-events: none;
-}
-
 .no-break {
   white-space: nowrap;
 }

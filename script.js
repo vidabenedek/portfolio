@@ -835,11 +835,9 @@ function initHeroPixelate() {
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => {
     markPageReady();
-    document.fonts.ready.then(initHeroPixelate);
   }, { once: true });
 } else {
   markPageReady();
-  document.fonts.ready.then(initHeroPixelate);
 }
 
 if (shouldStartAtTop) {
