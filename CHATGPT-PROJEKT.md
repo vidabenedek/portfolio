@@ -106,7 +106,7 @@ Az egyes fájlok tartalma a `<PROJECT_FILE path="...">` jelölések között tal
     href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&amp;display=swap"
     rel="stylesheet"
   >
-  <link rel="stylesheet" href="styles.css?v=20260904-seo">
+  <link rel="stylesheet" href="styles.css?v=20260904-mobile">
   <noscript>
     <style>
       .page-loader { display: none; }
@@ -601,7 +601,7 @@ Az egyes fájlok tartalma a `<PROJECT_FILE path="...">` jelölések között tal
     </main>
   </div>
 
-  <script src="script.js?v=20260807-responsive-particles"></script>
+  <script src="script.js?v=20260904-mobile"></script>
 </body>
 </html>
 ~~~
@@ -655,7 +655,7 @@ Az egyes fájlok tartalma a `<PROJECT_FILE path="...">` jelölések között tal
     href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&amp;display=swap"
     rel="stylesheet"
   >
-  <link rel="stylesheet" href="../styles.css?v=20260904-seo">
+  <link rel="stylesheet" href="../styles.css?v=20260904-mobile">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -751,7 +751,7 @@ Az egyes fájlok tartalma a `<PROJECT_FILE path="...">` jelölések között tal
       </section>
     </main>
   </div>
-  <script src="../script.js?v=20260807-responsive-particles"></script>
+  <script src="../script.js?v=20260904-mobile"></script>
 </body>
 </html>
 ~~~
@@ -1923,6 +1923,7 @@ h2,
   .hero {
     min-height: calc(100svh - 92px);
     padding: 28px 18px 24px;
+    gap: 12px;
   }
 
   .hero-copy,
@@ -1955,6 +1956,32 @@ h2,
       0 0 13px rgba(253, 28, 3, 0.18);
   }
 
+  .eyebrow {
+    max-width: 36ch;
+    font-size: 0.74rem;
+    line-height: 1.35;
+    letter-spacing: 0.12em;
+    text-wrap: balance;
+  }
+
+  .hero-text {
+    max-width: 32ch;
+    margin-top: 14px;
+    font-size: clamp(0.94rem, 4vw, 1.05rem);
+    line-height: 1.32;
+    text-wrap: balance;
+  }
+
+  .hero-meta {
+    gap: 12px;
+    padding-top: 4px;
+  }
+
+  .hero-meta p {
+    margin-top: 6px;
+    font-size: 0.96rem;
+  }
+
   h2 {
     font-size: clamp(2.6rem, 16vw, 4.2rem);
     letter-spacing: -0.04em;
@@ -1962,9 +1989,11 @@ h2,
   }
 
   .watch-page-heading h1 {
-    font-size: clamp(2.35rem, 12vw, 3.8rem);
+    font-size: clamp(2rem, 10vw, 3.4rem);
+    line-height: 0.92;
     letter-spacing: -0.04em;
     overflow-wrap: anywhere;
+    text-wrap: balance;
   }
 
   h2,
@@ -2069,8 +2098,8 @@ h2,
   .videoclip-fullscreen {
     right: 10px;
     bottom: 10px;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
   }
 
   .showreel-frame .videoclip-fullscreen {
@@ -2130,10 +2159,16 @@ h2,
     flex-direction: column;
     gap: 6px;
     padding: 12px;
+    padding-left: 66px;
+    min-height: 44px;
   }
 
   .hero {
     padding-inline: 14px;
+  }
+
+  .hero-text {
+    font-size: clamp(0.9rem, 4vw, 0.98rem);
   }
 }
 
@@ -2331,6 +2366,8 @@ function initBlobTracker() {
   let scrollVelocity = 0;
   let lastRenderTime = 0;
   let resizeTimer = 0;
+  let animationFrameId = 0;
+  let isRendering = false;
 
   function isMobileTracker() {
     return mobileQuery.matches || coarsePointerQuery.matches;
@@ -2765,16 +2802,21 @@ function initBlobTracker() {
     setHighlightedElement(nextElement);
   }
 
+  function queueRender() {
+    animationFrameId = window.requestAnimationFrame(render);
+  }
+
   function render(now = 0) {
     if (document.hidden) {
-      window.requestAnimationFrame(render);
+      isRendering = false;
+      animationFrameId = 0;
       return;
     }
 
     const mobileTracker = isMobileTracker();
 
     if (now - lastRenderTime < (mobileTracker ? 50 : 34)) {
-      window.requestAnimationFrame(render);
+      queueRender();
       return;
     }
 
@@ -2808,7 +2850,17 @@ function initBlobTracker() {
     drawLineGrain(maskRects);
     drawTrackedBoxes(maskRects);
 
-    window.requestAnimationFrame(render);
+    queueRender();
+  }
+
+  function startRendering() {
+    if (isRendering || document.hidden) {
+      return;
+    }
+
+    isRendering = true;
+    lastRenderTime = performance.now();
+    queueRender();
   }
 
   window.addEventListener("pointermove", (event) => {
@@ -2837,10 +2889,23 @@ function initBlobTracker() {
 
   window.addEventListener("resize", scheduleResize, { passive: true });
   window.addEventListener("orientationchange", scheduleResize, { passive: true });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      if (animationFrameId) {
+        window.cancelAnimationFrame(animationFrameId);
+      }
+
+      animationFrameId = 0;
+      isRendering = false;
+      return;
+    }
+
+    startRendering();
+  });
 
   refreshTrackedCandidates();
   resizeCanvas();
-  render();
+  startRendering();
 }
 
 function markPageReady() {

@@ -1160,6 +1160,7 @@ h2,
   .hero {
     min-height: calc(100svh - 92px);
     padding: 28px 18px 24px;
+    gap: 12px;
   }
 
   .hero-copy,
@@ -1192,6 +1193,32 @@ h2,
       0 0 13px rgba(253, 28, 3, 0.18);
   }
 
+  .eyebrow {
+    max-width: 36ch;
+    font-size: 0.74rem;
+    line-height: 1.35;
+    letter-spacing: 0.12em;
+    text-wrap: balance;
+  }
+
+  .hero-text {
+    max-width: 32ch;
+    margin-top: 14px;
+    font-size: clamp(0.94rem, 4vw, 1.05rem);
+    line-height: 1.32;
+    text-wrap: balance;
+  }
+
+  .hero-meta {
+    gap: 12px;
+    padding-top: 4px;
+  }
+
+  .hero-meta p {
+    margin-top: 6px;
+    font-size: 0.96rem;
+  }
+
   h2 {
     font-size: clamp(2.6rem, 16vw, 4.2rem);
     letter-spacing: -0.04em;
@@ -1199,9 +1226,11 @@ h2,
   }
 
   .watch-page-heading h1 {
-    font-size: clamp(2.35rem, 12vw, 3.8rem);
+    font-size: clamp(2rem, 10vw, 3.4rem);
+    line-height: 0.92;
     letter-spacing: -0.04em;
     overflow-wrap: anywhere;
+    text-wrap: balance;
   }
 
   h2,
@@ -1306,8 +1335,8 @@ h2,
   .videoclip-fullscreen {
     right: 10px;
     bottom: 10px;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
   }
 
   .showreel-frame .videoclip-fullscreen {
@@ -1367,10 +1396,16 @@ h2,
     flex-direction: column;
     gap: 6px;
     padding: 12px;
+    padding-left: 66px;
+    min-height: 44px;
   }
 
   .hero {
     padding-inline: 14px;
+  }
+
+  .hero-text {
+    font-size: clamp(0.9rem, 4vw, 0.98rem);
   }
 }
 

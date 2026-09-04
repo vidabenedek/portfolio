@@ -87,6 +87,8 @@ function initBlobTracker() {
   let scrollVelocity = 0;
   let lastRenderTime = 0;
   let resizeTimer = 0;
+  let animationFrameId = 0;
+  let isRendering = false;
 
   function isMobileTracker() {
     return mobileQuery.matches || coarsePointerQuery.matches;
@@ -521,16 +523,21 @@ function initBlobTracker() {
     setHighlightedElement(nextElement);
   }
 
+  function queueRender() {
+    animationFrameId = window.requestAnimationFrame(render);
+  }
+
   function render(now = 0) {
     if (document.hidden) {
-      window.requestAnimationFrame(render);
+      isRendering = false;
+      animationFrameId = 0;
       return;
     }
 
     const mobileTracker = isMobileTracker();
 
     if (now - lastRenderTime < (mobileTracker ? 50 : 34)) {
-      window.requestAnimationFrame(render);
+      queueRender();
       return;
     }
 
@@ -564,7 +571,17 @@ function initBlobTracker() {
     drawLineGrain(maskRects);
     drawTrackedBoxes(maskRects);
 
-    window.requestAnimationFrame(render);
+    queueRender();
+  }
+
+  function startRendering() {
+    if (isRendering || document.hidden) {
+      return;
+    }
+
+    isRendering = true;
+    lastRenderTime = performance.now();
+    queueRender();
   }
 
   window.addEventListener("pointermove", (event) => {
@@ -593,10 +610,23 @@ function initBlobTracker() {
 
   window.addEventListener("resize", scheduleResize, { passive: true });
   window.addEventListener("orientationchange", scheduleResize, { passive: true });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      if (animationFrameId) {
+        window.cancelAnimationFrame(animationFrameId);
+      }
+
+      animationFrameId = 0;
+      isRendering = false;
+      return;
+    }
+
+    startRendering();
+  });
 
   refreshTrackedCandidates();
   resizeCanvas();
-  render();
+  startRendering();
 }
 
 function markPageReady() {
