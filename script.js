@@ -42,10 +42,147 @@ let currentFrameSelection = [];
 let isSwitchingFrames = false;
 let isHeroTicking = false;
 
+function initScrollTextDecode() {
+  if (
+    reducedMotionQuery.matches ||
+    !("IntersectionObserver" in window) ||
+    (navigator.connection && navigator.connection.saveData)
+  ) {
+    return;
+  }
+
+  const scrambleCharacters = "!<>-_\\/[]{}=+*^?#";
+  const mobileDecode = mobilePointerQuery.matches;
+
+  function decodeText(element, finalText) {
+    const interactiveParent = element.closest("a, button, summary, [role]");
+    const hadAriaHidden = element.hasAttribute("aria-hidden");
+    const hadAriaLabel = element.hasAttribute("aria-label");
+    const startedAt = performance.now();
+    const duration = Math.min(2400, Math.max(1150, finalText.length * 30));
+    let lastFrameAt = 0;
+
+    if (interactiveParent && !hadAriaLabel) {
+      element.setAttribute("aria-label", finalText);
+    } else if (!interactiveParent && !hadAriaHidden) {
+      element.setAttribute("aria-hidden", "true");
+    }
+
+    function finishAccessibilityState() {
+      if (interactiveParent && !hadAriaLabel) {
+        element.removeAttribute("aria-label");
+      } else if (!interactiveParent && !hadAriaHidden) {
+        element.removeAttribute("aria-hidden");
+      }
+    }
+
+    function renderFrame(now) {
+      if (mobileDecode && now - lastFrameAt < 34) {
+        element._decodeFrame = window.requestAnimationFrame(renderFrame);
+        return;
+      }
+
+      lastFrameAt = now;
+      const progress = Math.min(1, (now - startedAt) / duration);
+      const fixedCharacterCount = Math.floor(finalText.length * progress);
+      let displayedText = finalText.slice(0, fixedCharacterCount);
+
+      for (let index = fixedCharacterCount; index < finalText.length; index += 1) {
+        const character = finalText[index];
+        const keepsPosition = character === " " || character === "\n";
+
+        displayedText += keepsPosition
+          ? character
+          : scrambleCharacters[Math.floor(Math.random() * scrambleCharacters.length)];
+      }
+
+      element.textContent = displayedText;
+
+      if (progress < 1) {
+        element._decodeFrame = window.requestAnimationFrame(renderFrame);
+        return;
+      }
+
+      element.textContent = finalText;
+      finishAccessibilityState();
+    }
+
+    if (element._decodeFrame) {
+      window.cancelAnimationFrame(element._decodeFrame);
+    }
+
+    let initialScramble = "";
+
+    for (let index = 0; index < finalText.length; index += 1) {
+      const character = finalText[index];
+      const keepsPosition = character === " " || character === "\n";
+
+      initialScramble += keepsPosition
+        ? character
+        : scrambleCharacters[Math.floor(Math.random() * scrambleCharacters.length)];
+    }
+
+    element.textContent = initialScramble;
+    element.classList.remove("text-decode-pending");
+    element._decodeFrame = window.requestAnimationFrame(renderFrame);
+  }
+
+  const textObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+          return;
+        }
+
+        textObserver.unobserve(entry.target);
+        const finalText = entry.target.textContent;
+
+        if (!finalText.trim()) {
+          return;
+        }
+
+        window.setTimeout(() => {
+          decodeText(entry.target, finalText);
+        }, Math.random() * 420);
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  document.querySelectorAll("[data-hero-decode]").forEach((element) => {
+    if (element.children.length) {
+      return;
+    }
+
+    if (/^(SCRIPT|STYLE|NOSCRIPT|IFRAME|VIDEO|IMG|CANVAS|SVG|PATH|INPUT|TEXTAREA|SELECT|OPTION)$/.test(element.tagName)) {
+      return;
+    }
+
+    if (element.classList.contains("sr-only")) {
+      return;
+    }
+
+    const text = element.textContent;
+    const fontSize = parseFloat(window.getComputedStyle(element).fontSize) || 0;
+
+    if (!text.trim() || text.length > 600 || fontSize < 17) {
+      return;
+    }
+
+    if (fontSize < 28 && element.closest("a, button, summary, [role='tab']")) {
+      return;
+    }
+
+    element.classList.add("text-decode-pending");
+    textObserver.observe(element);
+  });
+}
+
 function initBlobTracker() {
   if (
     !blobTracker ||
     reducedMotionQuery.matches ||
+    mobilePointerQuery.matches ||
     (navigator.connection && navigator.connection.saveData)
   ) {
     return;
@@ -876,7 +1013,13 @@ if (shouldStartAtTop) {
   }, { once: true });
 }
 
-initBlobTracker();
+initScrollTextDecode();
+
+if ("requestIdleCallback" in window) {
+  window.requestIdleCallback(initBlobTracker, { timeout: 1400 });
+} else {
+  window.setTimeout(initBlobTracker, 400);
+}
 
 function setMenuOpen(isOpen) {
   if (!siteHeader || !menuToggle) {
@@ -884,6 +1027,7 @@ function setMenuOpen(isOpen) {
   }
 
   siteHeader.classList.toggle("is-menu-open", isOpen);
+  body.classList.toggle("is-menu-open", isOpen);
   menuToggle.setAttribute("aria-expanded", String(isOpen));
   menuToggle.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
 }
@@ -1164,6 +1308,11 @@ if (showreelVideo) {
 if (musicVideo && musicVideoFullscreenButton) {
   musicVideoFullscreenButton.addEventListener("click", async () => {
     loadVideoSource(musicVideo);
+
+    const playback = musicVideo.play();
+    if (playback && typeof playback.catch === "function") {
+      playback.catch(() => {});
+    }
 
     try {
       if (document.fullscreenElement === musicVideo) {
