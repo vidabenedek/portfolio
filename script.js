@@ -45,14 +45,12 @@ let isHeroTicking = false;
 function initScrollTextDecode() {
   if (
     reducedMotionQuery.matches ||
-    !("IntersectionObserver" in window) ||
-    (navigator.connection && navigator.connection.saveData)
+    !("IntersectionObserver" in window)
   ) {
     return;
   }
 
   const scrambleCharacters = "!<>-_\\/[]{}=+*^?#";
-  const mobileDecode = mobilePointerQuery.matches;
 
   function decodeText(element, finalText) {
     const interactiveParent = element.closest("a, button, summary, [role]");
@@ -60,7 +58,6 @@ function initScrollTextDecode() {
     const hadAriaLabel = element.hasAttribute("aria-label");
     const startedAt = performance.now();
     const duration = Math.min(2400, Math.max(1150, finalText.length * 30));
-    let lastFrameAt = 0;
 
     if (interactiveParent && !hadAriaLabel) {
       element.setAttribute("aria-label", finalText);
@@ -77,12 +74,6 @@ function initScrollTextDecode() {
     }
 
     function renderFrame(now) {
-      if (mobileDecode && now - lastFrameAt < 34) {
-        element._decodeFrame = window.requestAnimationFrame(renderFrame);
-        return;
-      }
-
-      lastFrameAt = now;
       const progress = Math.min(1, (now - startedAt) / duration);
       const fixedCharacterCount = Math.floor(finalText.length * progress);
       let displayedText = finalText.slice(0, fixedCharacterCount);
