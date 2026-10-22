@@ -336,7 +336,7 @@ p {
 h1 {
   position: relative;
   margin-top: 14px;
-  font-size: clamp(4.2rem, 15vw, 11rem);
+  font-size: clamp(3.7rem, 9vw, 7.5rem);
   line-height: 0.86;
   letter-spacing: -0.08em;
   text-shadow:
@@ -1223,7 +1223,7 @@ h2,
 
   h1 {
     max-width: 100%;
-    font-size: clamp(3rem, 18vw, 5.1rem);
+    font-size: clamp(2.8rem, 15vw, 4.4rem);
     line-height: 0.84;
     letter-spacing: -0.06em;
     text-shadow:
