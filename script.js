@@ -4,6 +4,7 @@ const siteHeader = document.querySelector(".site-header");
 const navLinks = document.querySelectorAll(".site-nav a");
 const sections = document.querySelectorAll("main section[id]");
 const heroMedia = document.querySelector(".hero-media");
+const foregroundCopies = document.querySelectorAll(".foreground-copy");
 const menuToggle = document.querySelector(".menu-toggle");
 const randomGallery = document.querySelector("[data-random-gallery]");
 const frameButtons = document.querySelectorAll("[data-frame-trigger]");
@@ -40,7 +41,7 @@ const clipFrameSources = clipFrameFiles.map((fileName) => `${clipFrameDirectory}
 
 let currentFrameSelection = [];
 let isSwitchingFrames = false;
-let isHeroTicking = false;
+let isScrollEffectsTicking = false;
 
 function initScrollTextDecode() {
   if (
@@ -1089,23 +1090,49 @@ sections.forEach((section) => {
   navObserver.observe(section);
 });
 
-window.addEventListener("scroll", () => {
-  if (!heroMedia || reducedMotionQuery.matches) {
-    return;
-  }
-
-  if (isHeroTicking) {
-    return;
-  }
-
-  isHeroTicking = true;
-
-  window.requestAnimationFrame(() => {
+function updateScrollLayers() {
+  if (heroMedia) {
     const offset = Math.min(window.scrollY * 0.08, 36);
     heroMedia.style.transform = `scale(1.03) translateY(${offset}px)`;
-    isHeroTicking = false;
-  });
+  }
+
+  if (foregroundCopies.length) {
+    const isMobile = mobilePointerQuery.matches;
+    const maximumShift = isMobile ? 2.5 : 4;
+    const movementRatio = isMobile ? 0.006 : 0.008;
+    const viewportCenter = window.innerHeight / 2;
+
+    foregroundCopies.forEach((element) => {
+      const bounds = element.getBoundingClientRect();
+      const elementCenter = bounds.top + bounds.height / 2;
+      const shift = Math.max(
+        -maximumShift,
+        Math.min(maximumShift, (viewportCenter - elementCenter) * movementRatio)
+      );
+
+      element.style.setProperty("--foreground-shift", `${shift.toFixed(2)}px`);
+    });
+  }
+
+  isScrollEffectsTicking = false;
+}
+
+window.addEventListener("scroll", () => {
+  if (reducedMotionQuery.matches) {
+    return;
+  }
+
+  if (isScrollEffectsTicking) {
+    return;
+  }
+
+  isScrollEffectsTicking = true;
+  window.requestAnimationFrame(updateScrollLayers);
 }, { passive: true });
+
+if (!reducedMotionQuery.matches) {
+  window.requestAnimationFrame(updateScrollLayers);
+}
 
 function shuffleArray(items) {
   const shuffled = [...items];

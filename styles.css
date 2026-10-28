@@ -616,6 +616,31 @@ h2,
   gap: 18px;
 }
 
+.foreground-copy {
+  --foreground-shift: 0px;
+  position: relative;
+  z-index: 2;
+  isolation: isolate;
+  padding: clamp(20px, 2.6vw, 34px);
+  transform: translate3d(0, var(--foreground-shift), 0);
+  background:
+    linear-gradient(135deg, rgba(7, 9, 13, 0.94), rgba(7, 9, 13, 0.76));
+  box-shadow:
+    12px 14px 0 rgba(253, 28, 3, 0.045),
+    0 28px 72px rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+}
+
+.foreground-copy::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(115deg, rgba(253, 28, 3, 0.035), transparent 36%);
+  pointer-events: none;
+}
+
 .about-copy p,
 .featured-copy p,
 .work-card p,
@@ -1352,6 +1377,16 @@ h2,
     line-height: 1.36;
   }
 
+  .foreground-copy {
+    padding: 18px 16px;
+    background: rgba(7, 9, 13, 0.88);
+    box-shadow:
+      6px 8px 0 rgba(253, 28, 3, 0.04),
+      0 18px 38px rgba(0, 0, 0, 0.42);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
   .showreel {
     padding-top: 18px;
   }
@@ -1375,6 +1410,11 @@ h2,
   .contact-links,
   .videoclip-gallery {
     grid-template-columns: 1fr;
+  }
+
+  .videoclip-gallery {
+    gap: clamp(30px, 8vw, 40px);
+    padding-top: 22px;
   }
 
   .clip-lab-head,
@@ -1481,6 +1521,39 @@ h2,
   .videoclip-shot {
     grid-template-rows: auto auto auto;
     min-height: auto;
+    background: transparent;
+  }
+
+  .videoclip-identity {
+    padding: 13px 2px 9px;
+    background: transparent;
+  }
+
+  .videoclip-artist {
+    font-size: 0.68rem;
+    letter-spacing: 0.13em;
+  }
+
+  .videoclip-track {
+    margin-top: 4px;
+    font-size: clamp(1.08rem, 5.2vw, 1.3rem);
+  }
+
+  .videoclip-credits {
+    grid-template-columns: 0.5fr 0.95fr 1.35fr;
+    gap: 8px;
+    padding: 9px 2px 0;
+    background: transparent;
+  }
+
+  .videoclip-credits dt {
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+  }
+
+  .videoclip-credits dd {
+    margin-top: 4px;
+    font-size: 0.78rem;
   }
 }
 
@@ -1514,9 +1587,23 @@ h2,
   .hero-text {
     font-size: clamp(0.9rem, 4vw, 0.98rem);
   }
+
+  .videoclip-credits {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 10px;
+  }
+
+  .videoclip-credits > div:last-child {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (max-width: 360px) {
+  .page-shell {
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-left: max(12px, env(safe-area-inset-left));
+  }
+
   .site-mark {
     font-size: 0.82rem;
     letter-spacing: 0.14em;
