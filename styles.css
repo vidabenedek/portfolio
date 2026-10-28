@@ -530,6 +530,12 @@ h1 {
   padding: 84px 0 0;
 }
 
+.content-section,
+.showreel {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
 .section-heading {
   display: grid;
   grid-template-columns: 60px 1fr;
@@ -1214,6 +1220,8 @@ h2,
     padding: 10px 0 12px;
     background: rgba(3, 5, 9, 0.9);
     box-shadow: 0 10px 28px rgba(3, 5, 9, 0.32);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .site-mark {

@@ -180,7 +180,7 @@ function initBlobTracker() {
     return;
   }
 
-  const context = blobTracker.getContext("2d", { alpha: true });
+  const context = blobTracker.getContext("2d", { alpha: true, desynchronized: true });
 
   if (!context) {
     return;
@@ -231,7 +231,7 @@ function initBlobTracker() {
     const mobileTracker = isMobileTracker();
     width = window.innerWidth;
     height = window.innerHeight;
-    pixelRatio = Math.min(window.devicePixelRatio || 1, mobileTracker ? 1.15 : 1.75);
+    pixelRatio = Math.min(window.devicePixelRatio || 1, mobileTracker ? 1 : 1.5);
     blobTracker.width = Math.floor(width * pixelRatio);
     blobTracker.height = Math.floor(height * pixelRatio);
     blobTracker.style.width = `${width}px`;
@@ -665,7 +665,7 @@ function initBlobTracker() {
 
     const mobileTracker = isMobileTracker();
 
-    if (now - lastRenderTime < (mobileTracker ? 50 : 34)) {
+    if (now - lastRenderTime < (mobileTracker ? 60 : 42)) {
       queueRender();
       return;
     }
@@ -1259,6 +1259,19 @@ function canAutoplayVideo(video) {
   );
 }
 
+function shouldDeferAutomaticVideo(video) {
+  const connection = navigator.connection;
+  const isSlowConnection = connection && /(^|-)2g$/.test(connection.effectiveType || "");
+  const isDesktopVideoOnMobile =
+    video.dataset.videoAutoplay === "desktop" &&
+    window.matchMedia("(max-width: 760px)").matches;
+
+  return (
+    video.dataset.sourceLoaded !== "true" &&
+    (isDesktopVideoOnMobile || isSlowConnection || Boolean(connection && connection.saveData))
+  );
+}
+
 if (lazyVideos.length) {
   const videoObserver = new IntersectionObserver(
     (entries) => {
@@ -1270,12 +1283,7 @@ if (lazyVideos.length) {
           return;
         }
 
-        const deferDesktopVideoOnMobile =
-          video.dataset.videoAutoplay === "desktop" &&
-          window.matchMedia("(max-width: 760px)").matches &&
-          video.dataset.sourceLoaded !== "true";
-
-        if (deferDesktopVideoOnMobile) {
+        if (shouldDeferAutomaticVideo(video)) {
           return;
         }
 
