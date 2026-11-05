@@ -829,7 +829,7 @@ h2,
   contain: layout paint;
 }
 
-.videoclip-shot a {
+.videoclip-shot > .videoclip-video-link {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -919,7 +919,7 @@ h2,
   overflow-wrap: anywhere;
 }
 
-.videoclip-shot a:focus-visible {
+.videoclip-shot > .videoclip-video-link:focus-visible {
   outline: 2px solid var(--text);
   outline-offset: -6px;
 }
