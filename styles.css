@@ -868,6 +868,9 @@ h2,
 
 .videoclip-track a {
   display: inline-block;
+  width: auto;
+  aspect-ratio: auto;
+  overflow: visible;
   color: inherit;
   text-decoration: underline;
   text-decoration-color: transparent;
