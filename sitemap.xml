@@ -5,7 +5,7 @@
 >
   <url>
     <loc>https://vidabenedek.com/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <image:image>
       <image:loc>https://vidabenedek.com/hero-background.jpg</image:loc>
     </image:image>
@@ -27,9 +27,17 @@
   </url>
   <url>
     <loc>https://vidabenedek.com/showreel/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <image:image>
       <image:loc>https://vidabenedek.com/optimized/hero-background-1200.jpg</image:loc>
     </image:image>
   </url>
+  <url><loc>https://vidabenedek.com/work/ki-be/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://vidabenedek.com/work/tiszta/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://vidabenedek.com/work/sziven-utnek-a-melyek/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://vidabenedek.com/work/nem-is-te-lennel/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://vidabenedek.com/work/varazslo/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://vidabenedek.com/work/uni-univerzum/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://vidabenedek.com/work/eg-es-fold/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://vidabenedek.com/work/hideg-2/</loc><lastmod>2026-11-05</lastmod></url>
 </urlset>

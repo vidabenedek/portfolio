@@ -6,9 +6,6 @@ const sections = document.querySelectorAll("main section[id]");
 const heroMedia = document.querySelector(".hero-media");
 const foregroundCopies = document.querySelectorAll(".foreground-copy");
 const menuToggle = document.querySelector(".menu-toggle");
-const randomGallery = document.querySelector("[data-random-gallery]");
-const frameButtons = document.querySelectorAll("[data-frame-trigger]");
-const randomizeFramesButton = document.querySelector("[data-randomize-frames]");
 const showreelVideo = document.querySelector("[data-showreel-video]");
 const showreelFullscreenButton = document.querySelector("[data-showreel-fullscreen]");
 const blobTracker = document.querySelector("[data-blob-tracker]");
@@ -29,18 +26,6 @@ if (shouldStartAtTop && "scrollRestoration" in history) {
   window.scrollTo(0, 0);
 }
 
-// All random music-video reference frames used by this section live here.
-const clipFrameDirectory = randomGallery && randomGallery.dataset.referenceFolder
-  ? randomGallery.dataset.referenceFolder
-  : "clip-stills-mobile/";
-const clipFrameFiles = Array.from(
-  { length: 64 },
-  (_, index) => `frame-${String(index + 1).padStart(3, "0")}.jpg`
-);
-const clipFrameSources = clipFrameFiles.map((fileName) => `${clipFrameDirectory}${fileName}`);
-
-let currentFrameSelection = [];
-let isSwitchingFrames = false;
 let isScrollEffectsTicking = false;
 
 function initScrollTextDecode() {
@@ -194,7 +179,6 @@ function initBlobTracker() {
     ".fact-card",
     ".timeline-card",
     ".videoclip-shot",
-    ".clip-frame",
   ].join(",");
 
   const pointer = {
@@ -1132,104 +1116,6 @@ window.addEventListener("scroll", () => {
 
 if (!reducedMotionQuery.matches) {
   window.requestAnimationFrame(updateScrollLayers);
-}
-
-function shuffleArray(items) {
-  const shuffled = [...items];
-
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const randomIndex = Math.floor(Math.random() * (index + 1));
-    [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
-  }
-
-  return shuffled;
-}
-
-function getFrameLabel(source) {
-  const fileName = source.split("/").pop() || "still";
-  const readableName = fileName
-    .replace(/\.[^.]+$/, "")
-    .replace(/[_-]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  return `Music video still ${readableName} from Vida Benedek's directing portfolio`;
-}
-
-function getClipFrameSources() {
-  return clipFrameSources;
-}
-
-function getNextFrameSelection() {
-  const activeFrameSources = getClipFrameSources();
-  const currentSet = new Set(currentFrameSelection);
-  const availableSources = activeFrameSources.filter((source) => !currentSet.has(source));
-  const selectionPool = availableSources.length >= frameButtons.length ? availableSources : activeFrameSources;
-  const nextSelection = shuffleArray(selectionPool).slice(0, frameButtons.length);
-
-  if (nextSelection.length < frameButtons.length) {
-    return shuffleArray(activeFrameSources).slice(0, frameButtons.length);
-  }
-
-  return nextSelection;
-}
-
-function applyFrameSelection(nextSelection) {
-  frameButtons.forEach((button, index) => {
-    const image = button.querySelector("img");
-    const nextSource = nextSelection[index];
-
-    if (!image || !nextSource) {
-      return;
-    }
-
-    button.classList.add("is-swapping");
-
-    window.setTimeout(() => {
-      image.src = nextSource;
-      image.alt = getFrameLabel(nextSource);
-      button.setAttribute("aria-label", `Show another random music video frame. Current image: ${image.alt}`);
-    }, 140);
-
-    window.setTimeout(() => {
-      button.classList.remove("is-swapping");
-    }, 320);
-  });
-
-  currentFrameSelection = nextSelection;
-}
-
-function randomizeFrames() {
-  if (!frameButtons.length || isSwitchingFrames) {
-    return;
-  }
-
-  isSwitchingFrames = true;
-  const nextSelection = getNextFrameSelection();
-  applyFrameSelection(nextSelection);
-
-  window.setTimeout(() => {
-    isSwitchingFrames = false;
-  }, 340);
-}
-
-if (frameButtons.length) {
-  currentFrameSelection = getClipFrameSources().slice(0, frameButtons.length);
-
-  frameButtons.forEach((button, index) => {
-    const image = button.querySelector("img");
-    if (image) {
-      button.setAttribute("aria-label", `Show another random music video frame. Current image: ${image.alt}`);
-    }
-  });
-
-  frameButtons.forEach((button) => {
-    button.addEventListener("click", randomizeFrames);
-  });
-
-  if (randomizeFramesButton) {
-    randomizeFramesButton.addEventListener("click", randomizeFrames);
-  }
 }
 
 function loadVideoSource(video) {
