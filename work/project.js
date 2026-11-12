@@ -4,6 +4,7 @@ const projects = {
     title: "SUN",
     year: "2026",
     youtube: "https://www.youtube.com/watch?v=qw8giVFSmjE",
+    youtubeId: "qw8giVFSmjE",
     next: ["ki-be", "KI BE"],
     credits: [
       ["Director", "Vida Benedek"],
@@ -23,6 +24,7 @@ const projects = {
     title: "KI BE",
     year: "2026",
     youtube: "https://www.youtube.com/watch?v=HJwIDaARL5k",
+    youtubeId: "HJwIDaARL5k",
     next: ["tiszta", "TISZTA"],
     credits: [
       ["Director", "Vida Benedek"],
@@ -44,6 +46,7 @@ const projects = {
     title: "TISZTA",
     year: "2026",
     youtube: "https://www.youtube.com/watch?v=M6TgqOht1_U",
+    youtubeId: "M6TgqOht1_U",
     next: ["sziven-utnek-a-melyek", "SZÍVEN ÜTNEK A MÉLYEK"],
     credits: [
       ["Director", "Vida Benedek"], ["DOP", "Kirchknopf Mátyás"],
@@ -60,6 +63,7 @@ const projects = {
     title: "SZÍVEN ÜTNEK A MÉLYEK",
     year: "2026",
     youtube: "https://www.youtube.com/watch?v=KUAKet2wHBo",
+    youtubeId: "KUAKet2wHBo",
     next: ["nem-is-te-lennel", "NEM IS TE LENNÉL"],
     credits: [
       ["Director", "Vida Benedek"], ["DOP", "Kirchknopf Mátyás"],
@@ -79,6 +83,7 @@ const projects = {
     title: "NEM IS TE LENNÉL",
     year: "2026",
     youtube: "https://www.youtube.com/watch?v=rQDjx8vkRmA",
+    youtubeId: "rQDjx8vkRmA",
     next: ["varazslo", "VARÁZSLÓ"],
     credits: [
       ["Director", "Vida Benedek"], ["DOP", "Kirchknopf Mátyás"],
@@ -97,6 +102,7 @@ const projects = {
     title: "VARÁZSLÓ",
     year: "2026",
     youtube: "https://www.youtube.com/watch?v=0HYk5hYBVUs",
+    youtubeId: "0HYk5hYBVUs",
     next: ["uni-univerzum", "UNI UNIVERZUM"],
     credits: [
       ["Director", "Vida Benedek"], ["DOP", "Kirchknopf Mátyás"],
@@ -112,6 +118,7 @@ const projects = {
     title: "UNI UNIVERZUM",
     year: "2025",
     youtube: "https://www.youtube.com/watch?v=0dUuvQV0kcc",
+    youtubeId: "0dUuvQV0kcc",
     next: ["eg-es-fold", "ÉG ÉS FÖLD"],
     credits: [
       ["Director", "Vida Benedek"], ["DOP", "Kirchknopf Mátyás"],
@@ -123,6 +130,7 @@ const projects = {
     title: "ÉG ÉS FÖLD",
     year: "2025",
     youtube: "https://www.youtube.com/watch?v=ZT4U71fUkZc",
+    youtubeId: "ZT4U71fUkZc",
     next: ["hideg-2", "HIDEG 2"],
     credits: [
       ["Director", "Vida Benedek"], ["DOP", "Kirchknopf Mátyás"],
@@ -139,6 +147,7 @@ const projects = {
     title: "HIDEG 2",
     year: "2023",
     youtube: "https://www.youtube.com/watch?v=yd0roFBKNnw",
+    youtubeId: "yd0roFBKNnw",
     next: ["sun", "SUN"],
     credits: [
       ["Director", "Vida Benedek"], ["DOP", "Kirchknopf Mátyás"],
@@ -168,6 +177,18 @@ if (project && root) {
           <p class="project-kicker">MUSIC VIDEO / ${project.year}</p>
           <h1 class="project-title">${project.title}</h1>
           <p class="project-artist">${project.artist}</p>
+          <div class="project-video">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/${project.youtubeId}"
+              title="${project.artist} – ${project.title} official music video"
+              width="1280"
+              height="720"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
+          </div>
           <section class="project-credits" aria-labelledby="credits-title">
             <h2 id="credits-title">CREW</h2>
             <dl class="credit-list">${credits}</dl>

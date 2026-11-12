@@ -12,10 +12,13 @@
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="theme-color" content="#030509">
+  <meta name="color-scheme" content="dark">
   <!-- GOOGLE SEARCH CONSOLE VERIFICATION: insert the official verification meta tag here. -->
   <link rel="canonical" href="https://vidabenedek.com/">
   <link rel="alternate" hreflang="en" href="https://vidabenedek.com/">
   <link rel="alternate" hreflang="x-default" href="https://vidabenedek.com/">
+  <link rel="sitemap" type="application/xml" href="https://vidabenedek.com/sitemap.xml">
+  <link rel="me" href="https://www.instagram.com/vidabenedek/">
   <link rel="icon" href="favicon.svg?v=3" type="image/svg+xml">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="en_US">
@@ -26,27 +29,26 @@
     content="Vida Benedek is a Hungarian film director and creative director based in Budapest, directing commercials, music videos and short films. Portfolio and director showreel."
   >
   <meta property="og:url" content="https://vidabenedek.com/">
-  <meta property="og:image" content="https://vidabenedek.com/hero-background.jpg">
-  <meta property="og:image:secure_url" content="https://vidabenedek.com/hero-background.jpg">
+  <meta property="og:image" content="https://vidabenedek.com/optimized/hero-background-1200.jpg">
+  <meta property="og:image:secure_url" content="https://vidabenedek.com/optimized/hero-background-1200.jpg">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:alt" content="Film still from the directing portfolio of Vida Benedek">
-  <meta property="og:image:width" content="1920">
-  <meta property="og:image:height" content="1080">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="675">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Vida Benedek — Rendező / Film Director | Budapest">
   <meta
     name="twitter:description"
     content="Vida Benedek is a Hungarian film director and creative director based in Budapest, directing commercials, music videos and short films. Portfolio and director showreel."
   >
-  <meta name="twitter:image" content="https://vidabenedek.com/hero-background.jpg">
+  <meta name="twitter:image" content="https://vidabenedek.com/optimized/hero-background-1200.jpg">
   <meta name="twitter:image:alt" content="Film still from the directing portfolio of Vida Benedek">
   <link rel="preload" as="image" href="optimized/hero-background-1200.jpg" fetchpriority="high">
   <link rel="preload" as="font" href="fonts/league-spartan-latin.woff2" type="font/woff2" crossorigin>
   <link rel="preload" as="font" href="fonts/league-spartan-latin-ext.woff2" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=20261112-handball-video">
+  <link rel="stylesheet" href="styles.css?v=20261112-seo-performance">
   <noscript>
     <style>
-      .page-loader { display: none; }
       .panel { opacity: 1; transform: none; }
     </style>
   </noscript>
@@ -73,7 +75,7 @@
           "name": "Vida Benedek — Rendező / Film Director | Budapest",
           "description": "Vida Benedek is a Hungarian film director and creative director based in Budapest, directing commercials, music videos and short films. Portfolio and director showreel.",
           "inLanguage": "en",
-          "dateModified": "2026-09-04",
+          "dateModified": "2026-11-12",
           "isPartOf": {
             "@id": "https://vidabenedek.com/#website"
           },
@@ -90,10 +92,10 @@
         {
           "@type": "ImageObject",
           "@id": "https://vidabenedek.com/#primary-image",
-          "contentUrl": "https://vidabenedek.com/hero-background.jpg",
-          "url": "https://vidabenedek.com/hero-background.jpg",
-          "width": 1920,
-          "height": 1080,
+          "contentUrl": "https://vidabenedek.com/optimized/hero-background-1200.jpg",
+          "url": "https://vidabenedek.com/optimized/hero-background-1200.jpg",
+          "width": 1200,
+          "height": 675,
           "caption": "Film still from the directing portfolio of Vida Benedek"
         },
         {
@@ -181,12 +183,8 @@
     }
   </script>
 </head>
-<body class="is-loading">
-  <div class="page-loader" aria-hidden="true">
-    <span>VIDA BENEDEK</span>
-  </div>
-
-  <canvas class="blob-tracker" data-blob-tracker aria-hidden="true"></canvas>
+<body>
+  <a class="skip-link" href="#top">SKIP TO CONTENT</a>
 
   <div class="page-shell">
     <header class="site-header">
@@ -212,7 +210,9 @@
 
     <main id="top">
       <section class="hero panel panel-visible">
-        <div class="hero-media"></div>
+        <div class="hero-media" aria-hidden="true">
+          <img src="optimized/hero-background-1200.jpg" alt="" width="1200" height="675" fetchpriority="high" decoding="async">
+        </div>
 
         <div class="hero-copy">
           <p class="eyebrow" data-hero-decode>RENDEZŐ / FILM DIRECTOR / CREATIVE DIRECTOR</p>
@@ -596,8 +596,6 @@
               preload="none"
               poster="optimized/hero-background-1200.jpg"
               data-showreel-video
-              data-lazy-video
-              data-video-autoplay="desktop"
               data-animation-mask
             ></video>
 
@@ -686,6 +684,6 @@
     </main>
   </div>
 
-  <script src="script.js?v=20261028-performance"></script>
+  <script src="script.js?v=20261112-seo-performance-v2"></script>
 </body>
 </html>
