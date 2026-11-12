@@ -1009,36 +1009,6 @@ h2,
   outline-offset: -2px;
 }
 
-.commercial-video-play {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  width: 58px;
-  height: 42px;
-  border: 1px solid rgba(255, 255, 255, 0.72);
-  border-radius: 2px;
-  background: rgba(3, 5, 9, 0.74);
-  box-shadow: 0 0 24px rgba(253, 28, 3, 0.3);
-  transform: translate(-50%, -50%);
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-  pointer-events: none;
-}
-
-.commercial-video-play::after {
-  content: "";
-  position: absolute;
-  inset: 50% auto auto 50%;
-  border-top: 8px solid transparent;
-  border-bottom: 8px solid transparent;
-  border-left: 13px solid #fff;
-  transform: translate(-42%, -50%);
-}
-
-.commercial-video-link:hover .commercial-video-play,
-.commercial-video-link:focus-visible .commercial-video-play {
-  border-color: var(--accent);
-  background: var(--accent);
-}
-
 .commercial-video-copy {
   display: grid;
   gap: 14px;
