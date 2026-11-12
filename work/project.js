@@ -1,4 +1,23 @@
 const projects = {
+  sun: {
+    artist: "boebeck",
+    title: "SUN",
+    year: "2026",
+    youtube: "https://www.youtube.com/watch?v=qw8giVFSmjE",
+    next: ["ki-be", "KI BE"],
+    credits: [
+      ["Director", "Vida Benedek"],
+      ["DOP", "Kirchknopf Mátyás"],
+      ["1st AC / Gaffer", "Bálint Varga"],
+      ["Creative Producer", "Turjányi Lilla"],
+      ["Colorist", "Noé Felleg"],
+      ["Editor", "Dávid Kovács"],
+      ["Sound Mixing", "Péter Egyedi"],
+      ["Sound Mastering", "Gergő Dorozsmai / Tom-Tom Stúdió"],
+      ["Venue", "Dante, Budapest"],
+      ["Special Thanks", "ODESA Films / Alfa Rental"],
+    ],
+  },
   "ki-be": {
     artist: "Czeglady x Milan Hodovan",
     title: "KI BE",
@@ -120,7 +139,7 @@ const projects = {
     title: "HIDEG 2",
     year: "2023",
     youtube: "https://www.youtube.com/watch?v=yd0roFBKNnw",
-    next: ["ki-be", "KI BE"],
+    next: ["sun", "SUN"],
     credits: [
       ["Director", "Vida Benedek"], ["DOP", "Kirchknopf Mátyás"],
       ["Actor", "Reiter Zita"], ["Editor", "Kovács Dávid"],

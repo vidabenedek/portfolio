@@ -5,12 +5,15 @@
 >
   <url>
     <loc>https://vidabenedek.com/</loc>
-    <lastmod>2026-11-05</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <image:image>
       <image:loc>https://vidabenedek.com/hero-background.jpg</image:loc>
     </image:image>
     <image:image>
       <image:loc>https://vidabenedek.com/optimized/lenkke-1280.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://vidabenedek.com/optimized/boebeck-sun-youtube.jpg</image:loc>
     </image:image>
     <image:image>
       <image:loc>https://vidabenedek.com/optimized/videoclip-001-1280.jpg</image:loc>
@@ -32,6 +35,7 @@
       <image:loc>https://vidabenedek.com/optimized/hero-background-1200.jpg</image:loc>
     </image:image>
   </url>
+  <url><loc>https://vidabenedek.com/work/sun/</loc><lastmod>2026-11-12</lastmod></url>
   <url><loc>https://vidabenedek.com/work/ki-be/</loc><lastmod>2026-11-05</lastmod></url>
   <url><loc>https://vidabenedek.com/work/tiszta/</loc><lastmod>2026-11-05</lastmod></url>
   <url><loc>https://vidabenedek.com/work/sziven-utnek-a-melyek/</loc><lastmod>2026-11-05</lastmod></url>
