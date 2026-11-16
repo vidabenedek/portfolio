@@ -1246,12 +1246,13 @@ h2,
 }
 
 .work-card-title-row-multiple {
-  grid-template-columns: minmax(0, 1fr) clamp(150px, 16vw, 210px);
+  grid-template-columns: minmax(0, 1fr) clamp(210px, 20vw, 240px);
 }
 
 .official-selection-marks {
   display: grid;
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
   align-content: center;
 }
 
@@ -1740,12 +1741,14 @@ h2,
   }
 
   .official-selection-marks {
-    grid-template-columns: repeat(2, minmax(0, 142px));
+    width: min(100%, 300px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
 
   .official-selection-gallery {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
 
   .watch-page {
