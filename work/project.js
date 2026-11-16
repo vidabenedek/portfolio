@@ -62,6 +62,7 @@ const projects = {
     artist: "LENKKE",
     title: "SZÍVEN ÜTNEK A MÉLYEK",
     year: "2026",
+    award: "LEGJOBB TÁNC KATEGÓRIA",
     youtube: "https://www.youtube.com/watch?v=KUAKet2wHBo",
     youtubeId: "KUAKet2wHBo",
     next: ["nem-is-te-lennel", "NEM IS TE LENNÉL"],
@@ -82,6 +83,7 @@ const projects = {
     artist: "Szlimmy",
     title: "NEM IS TE LENNÉL",
     year: "2026",
+    award: "LEGJOBB ALAKÍTÁS",
     youtube: "https://www.youtube.com/watch?v=rQDjx8vkRmA",
     youtubeId: "rQDjx8vkRmA",
     next: ["varazslo", "VARÁZSLÓ"],
@@ -166,6 +168,12 @@ if (project && root) {
   const credits = project.credits
     .map(([role, names]) => `<div><dt>${role}</dt><dd>${names}</dd></div>`)
     .join("");
+  const award = project.award
+    ? `<aside class="project-award" aria-label="Magyar Klipszemle 2026 — ${project.award}">
+        <img src="../../optimized/magyar-klipszemle.png" alt="" width="238" height="123">
+        <p><span>MAGYAR KLIPSZEMLE 2026</span><strong>${project.award}</strong></p>
+      </aside>`
+    : "";
   root.innerHTML = `
     <div class="project-shell">
       <nav class="project-nav" aria-label="Project navigation">
@@ -177,6 +185,7 @@ if (project && root) {
           <p class="project-kicker">MUSIC VIDEO / ${project.year}</p>
           <h1 class="project-title">${project.title}</h1>
           <p class="project-artist">${project.artist}</p>
+          ${award}
           <div class="project-video">
             <iframe
               src="https://www.youtube-nocookie.com/embed/${project.youtubeId}"

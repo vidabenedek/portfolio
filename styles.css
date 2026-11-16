@@ -1033,6 +1033,10 @@ h2,
   contain: layout paint;
 }
 
+.videoclip-shot-awarded {
+  grid-template-rows: auto 86px auto 78px;
+}
+
 .videoclip-shot > .videoclip-video-link {
   display: block;
   width: 100%;
@@ -1092,6 +1096,58 @@ h2,
 .videoclip-track a:focus-visible {
   outline: 1px solid currentColor;
   outline-offset: 4px;
+}
+
+.videoclip-award {
+  display: grid;
+  grid-template-columns: 94px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  min-height: 76px;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(226, 218, 48, 0.28);
+  border-bottom: 1px solid rgba(226, 218, 48, 0.16);
+  background: linear-gradient(105deg, rgba(226, 218, 48, 0.11), rgba(6, 8, 12, 0.94) 54%);
+}
+
+.videoclip-shot .videoclip-award-logo {
+  width: 94px;
+  height: auto;
+  object-fit: contain;
+  filter: none;
+  transform: none;
+  transition: none;
+}
+
+.videoclip-shot:hover .videoclip-award-logo,
+.videoclip-shot.is-blob-tracked .videoclip-award-logo {
+  filter: none;
+  transform: none;
+}
+
+.videoclip-award p {
+  min-width: 0;
+  margin: 0;
+  line-height: 1.14;
+}
+
+.videoclip-award span,
+.videoclip-award strong {
+  display: block;
+}
+
+.videoclip-award span {
+  color: var(--text-soft);
+  font-size: 0.58rem;
+  letter-spacing: 0.11em;
+}
+
+.videoclip-award strong {
+  margin-top: 5px;
+  color: #e2da30;
+  font-size: clamp(0.76rem, 1.25vw, 0.94rem);
+  line-height: 1.08;
+  letter-spacing: 0.045em;
 }
 
 .videoclip-credits {
@@ -1655,6 +1711,10 @@ h2,
     background: transparent;
   }
 
+  .videoclip-shot-awarded {
+    grid-template-rows: auto auto auto auto;
+  }
+
   .videoclip-identity {
     padding: 13px 2px 9px;
     background: transparent;
@@ -1671,6 +1731,18 @@ h2,
     margin-top: 4px;
     font-size: clamp(1.04rem, 5vw, 1.28rem);
     line-height: 1.18;
+  }
+
+  .videoclip-award {
+    grid-template-columns: 86px minmax(0, 1fr);
+    gap: 12px;
+    min-height: 0;
+    margin-top: 4px;
+    padding: 10px;
+  }
+
+  .videoclip-shot .videoclip-award-logo {
+    width: 86px;
   }
 
   .videoclip-credits {
