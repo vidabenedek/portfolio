@@ -62,7 +62,7 @@ const projects = {
     artist: "LENKKE",
     title: "SZÍVEN ÜTNEK A MÉLYEK",
     year: "2026",
-    award: "LEGJOBB TÁNC KATEGÓRIA",
+    award: "BEST DANCE CATEGORY",
     youtube: "https://www.youtube.com/watch?v=KUAKet2wHBo",
     youtubeId: "KUAKet2wHBo",
     next: ["nem-is-te-lennel", "NEM IS TE LENNÉL"],
@@ -83,7 +83,7 @@ const projects = {
     artist: "Szlimmy",
     title: "NEM IS TE LENNÉL",
     year: "2026",
-    award: "LEGJOBB ALAKÍTÁS",
+    award: "BEST PERFORMANCE",
     youtube: "https://www.youtube.com/watch?v=rQDjx8vkRmA",
     youtubeId: "rQDjx8vkRmA",
     next: ["varazslo", "VARÁZSLÓ"],
@@ -169,9 +169,9 @@ if (project && root) {
     .map(([role, names]) => `<div><dt>${role}</dt><dd>${names}</dd></div>`)
     .join("");
   const award = project.award
-    ? `<aside class="project-award" aria-label="Magyar Klipszemle 2026 — ${project.award}">
+    ? `<aside class="project-award" aria-label="Hungarian Music Video Festival 2026 — ${project.award}">
         <img src="../../optimized/magyar-klipszemle.png" alt="" width="238" height="123">
-        <p><span>MAGYAR KLIPSZEMLE 2026</span><strong>${project.award}</strong></p>
+        <p><span>HUNGARIAN MUSIC VIDEO FESTIVAL 2026</span><strong>${project.award}</strong></p>
       </aside>`
     : "";
   root.innerHTML = `
