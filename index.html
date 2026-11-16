@@ -46,7 +46,7 @@
   <link rel="preload" as="image" href="optimized/hero-background-1200.jpg" fetchpriority="high">
   <link rel="preload" as="font" href="fonts/league-spartan-latin.woff2" type="font/woff2" crossorigin>
   <link rel="preload" as="font" href="fonts/league-spartan-latin-ext.woff2" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=20261113-blob-tracker">
+  <link rel="stylesheet" href="styles.css?v=20261116-video-controls">
   <noscript>
     <style>
       .panel { opacity: 1; transform: none; }
@@ -282,8 +282,9 @@
               <h3>MUSIC VIDEOS</h3>
             </header>
 
-            <div class="videoclip-banner">
+            <div class="videoclip-banner video-player" data-video-player>
               <video
+                controls
                 muted
                 loop
                 playsinline
@@ -291,27 +292,17 @@
                 poster="optimized/hero-background-1200.jpg"
                 disablepictureinpicture
                 controlslist="nodownload noplaybackrate noremoteplayback"
-                tabindex="-1"
-                aria-hidden="true"
+                tabindex="0"
+                aria-label="Vida Benedek music video reel"
                 data-lazy-video
                 data-video-autoplay="desktop"
                 data-animation-mask
                 data-music-video
+                data-video-controls
               >
                 <source data-src="optimized/vida-benedek-music-video-reel-2026-mobile.mp4?v=20261028-performance" type="video/mp4" media="(max-width: 760px)">
                 <source data-src="optimized/vida-benedek-music-video-reel-2026.mp4?v=20261028-performance" type="video/mp4">
               </video>
-              <button
-                type="button"
-                class="videoclip-fullscreen"
-                aria-label="View music video fullscreen"
-                title="Fullscreen"
-                data-music-video-fullscreen
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" />
-                </svg>
-              </button>
             </div>
 
             <div class="videoclip-gallery">
@@ -587,9 +578,10 @@
       <section id="showreel" class="showreel panel" aria-labelledby="showreel-title">
         <div class="showreel-stage">
           <h2 id="showreel-title" class="sr-only">Director's Showreel</h2>
-          <div class="showreel-frame">
+          <div class="showreel-frame video-player" data-video-player>
             <video
               class="showreel-video"
+              controls
               data-src="VIDA_BENEDEK_SHOWREEL_2025.mp4"
               aria-label="Vida Benedek director showreel"
               muted
@@ -599,22 +591,12 @@
               poster="optimized/hero-background-1200.jpg"
               data-showreel-video
               data-animation-mask
+              data-video-controls
             ></video>
 
             <a class="showreel-overlay" href="/showreel/" aria-label="Watch Vida Benedek Director Showreel 2025">
               <span>DIRECTOR SHOWREEL</span>
             </a>
-            <button
-              type="button"
-              class="videoclip-fullscreen"
-              aria-label="View showreel fullscreen"
-              title="Fullscreen"
-              data-showreel-fullscreen
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" />
-              </svg>
-            </button>
           </div>
         </div>
       </section>
@@ -686,6 +668,6 @@
     </main>
   </div>
 
-  <script src="script.js?v=20261113-blob-tracker"></script>
+  <script src="script.js?v=20261116-video-controls"></script>
 </body>
 </html>

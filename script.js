@@ -6,12 +6,9 @@ const sections = document.querySelectorAll("main section[id]");
 const heroMedia = document.querySelector(".hero-media");
 const foregroundCopies = document.querySelectorAll(".foreground-copy");
 const menuToggle = document.querySelector(".menu-toggle");
-const showreelVideo = document.querySelector("[data-showreel-video]");
-const showreelFullscreenButton = document.querySelector("[data-showreel-fullscreen]");
 const blobTracker = document.querySelector("[data-blob-tracker]");
 const lazyVideos = document.querySelectorAll("[data-lazy-video]");
-const musicVideo = document.querySelector("[data-music-video]");
-const musicVideoFullscreenButton = document.querySelector("[data-music-video-fullscreen]");
+const controlledVideos = document.querySelectorAll("[data-video-controls]");
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 const mobilePointerQuery = window.matchMedia("(max-width: 760px), (hover: none) and (pointer: coarse)");
 const navigationEntry = typeof performance.getEntriesByType === "function"
@@ -914,6 +911,150 @@ function loadVideoSource(video) {
   video.load();
 }
 
+function formatVideoTime(value) {
+  if (!Number.isFinite(value) || value < 0) {
+    return "0:00";
+  }
+
+  const minutes = Math.floor(value / 60);
+  const seconds = Math.floor(value % 60).toString().padStart(2, "0");
+  return `${minutes}:${seconds}`;
+}
+
+function initVideoControls(video) {
+  const player = video.closest("[data-video-player]");
+  if (!player || player.querySelector(".video-controls")) {
+    return;
+  }
+
+  const controls = document.createElement("div");
+  controls.className = "video-controls";
+  controls.setAttribute("role", "group");
+  controls.setAttribute("aria-label", "Video controls");
+  controls.innerHTML = `
+    <label class="video-seek-label">
+      <span class="sr-only">Seek video</span>
+      <input class="video-seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek video">
+    </label>
+    <div class="video-control-row">
+      <button class="video-control video-toggle" type="button" aria-label="Play video" title="Play / pause">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="video-play-icon" d="M8 5v14l11-7z"/><path class="video-pause-icon" d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>
+      </button>
+      <span class="video-time" aria-live="off"><span data-video-current>0:00</span><span aria-hidden="true"> / </span><span data-video-duration>0:00</span></span>
+      <button class="video-control video-mute" type="button" aria-label="Unmute video" title="Mute / unmute">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a3.5 3.5 0 0 0-2-3.15v6.3A3.5 3.5 0 0 0 16.5 12z"/><path class="video-muted-mark" d="m18 9 4 6m0-6-4 6"/></svg>
+      </button>
+      <button class="video-control video-fullscreen" type="button" aria-label="Open video fullscreen" title="Fullscreen">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M8 21H3v-5m13 5h5v-5"/></svg>
+      </button>
+    </div>`;
+  video.removeAttribute("controls");
+  player.appendChild(controls);
+
+  const toggle = controls.querySelector(".video-toggle");
+  const mute = controls.querySelector(".video-mute");
+  const fullscreen = controls.querySelector(".video-fullscreen");
+  const seek = controls.querySelector(".video-seek");
+  const current = controls.querySelector("[data-video-current]");
+  const duration = controls.querySelector("[data-video-duration]");
+  let isSeeking = false;
+
+  const ensureSource = () => loadVideoSource(video);
+  const updatePlayState = () => {
+    const isPlaying = !video.paused && !video.ended;
+    player.classList.toggle("is-video-playing", isPlaying);
+    toggle.setAttribute("aria-label", isPlaying ? "Pause video" : "Play video");
+  };
+  const updateMuteState = () => {
+    player.classList.toggle("is-video-muted", video.muted || video.volume === 0);
+    mute.setAttribute("aria-label", video.muted || video.volume === 0 ? "Unmute video" : "Mute video");
+  };
+  const updateTimeline = () => {
+    const videoDuration = Number.isFinite(video.duration) ? video.duration : 0;
+    const progress = videoDuration ? video.currentTime / videoDuration : 0;
+    if (!isSeeking) {
+      seek.value = Math.round(progress * 1000);
+    }
+    seek.style.setProperty("--video-progress", `${progress * 100}%`);
+    current.textContent = formatVideoTime(video.currentTime);
+    duration.textContent = formatVideoTime(videoDuration);
+  };
+  const togglePlayback = () => {
+    ensureSource();
+    if (video.paused) {
+      const playback = video.play();
+      if (playback && typeof playback.catch === "function") playback.catch(() => {});
+    } else {
+      video.pause();
+    }
+  };
+
+  toggle.addEventListener("click", togglePlayback);
+  video.addEventListener("click", togglePlayback);
+  video.addEventListener("dblclick", () => fullscreen.click());
+  video.addEventListener("play", updatePlayState);
+  video.addEventListener("pause", updatePlayState);
+  video.addEventListener("volumechange", updateMuteState);
+  video.addEventListener("loadedmetadata", updateTimeline);
+  video.addEventListener("durationchange", updateTimeline);
+  video.addEventListener("timeupdate", updateTimeline);
+
+  seek.addEventListener("input", () => {
+    isSeeking = true;
+    ensureSource();
+    const videoDuration = Number.isFinite(video.duration) ? video.duration : 0;
+    const previewTime = videoDuration * (Number(seek.value) / 1000);
+    seek.style.setProperty("--video-progress", `${Number(seek.value) / 10}%`);
+    current.textContent = formatVideoTime(previewTime);
+  });
+  seek.addEventListener("change", () => {
+    const videoDuration = Number.isFinite(video.duration) ? video.duration : 0;
+    if (videoDuration) video.currentTime = videoDuration * (Number(seek.value) / 1000);
+    isSeeking = false;
+    updateTimeline();
+  });
+
+  mute.addEventListener("click", () => {
+    video.muted = !video.muted;
+    if (!video.muted && video.volume === 0) video.volume = 1;
+  });
+
+  fullscreen.addEventListener("click", async () => {
+    ensureSource();
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else if (player.requestFullscreen) {
+        await player.requestFullscreen();
+      } else if (video.webkitEnterFullscreen) {
+        video.webkitEnterFullscreen();
+      }
+    } catch (error) {
+      // Some browsers only allow fullscreen from a direct user gesture.
+    }
+  });
+
+  video.addEventListener("keydown", (event) => {
+    if (event.key === " " || event.key === "k") {
+      event.preventDefault();
+      togglePlayback();
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      event.preventDefault();
+      ensureSource();
+      const direction = event.key === "ArrowLeft" ? -1 : 1;
+      video.currentTime = Math.max(0, Math.min(video.duration || 0, video.currentTime + direction * 5));
+    } else if (event.key.toLowerCase() === "f") {
+      fullscreen.click();
+    }
+  });
+
+  updatePlayState();
+  updateMuteState();
+  updateTimeline();
+}
+
+controlledVideos.forEach(initVideoControls);
+
 function canAutoplayVideo(video) {
   const isDesktopOnly = video.dataset.videoAutoplay === "desktop";
 
@@ -969,52 +1110,4 @@ if (lazyVideos.length) {
   );
 
   lazyVideos.forEach((video) => videoObserver.observe(video));
-}
-
-if (showreelVideo) {
-  if (showreelFullscreenButton) {
-    showreelFullscreenButton.addEventListener("click", async () => {
-      loadVideoSource(showreelVideo);
-
-      const playback = showreelVideo.play();
-      if (playback && typeof playback.catch === "function") {
-        playback.catch(() => {});
-      }
-
-      if (document.fullscreenElement === showreelVideo) {
-        await document.exitFullscreen();
-        return;
-      }
-
-      if (showreelVideo.requestFullscreen) {
-        await showreelVideo.requestFullscreen();
-      } else if (showreelVideo.webkitEnterFullscreen) {
-        showreelVideo.webkitEnterFullscreen();
-      }
-    });
-  }
-
-}
-
-if (musicVideo && musicVideoFullscreenButton) {
-  musicVideoFullscreenButton.addEventListener("click", async () => {
-    loadVideoSource(musicVideo);
-
-    const playback = musicVideo.play();
-    if (playback && typeof playback.catch === "function") {
-      playback.catch(() => {});
-    }
-
-    try {
-      if (document.fullscreenElement === musicVideo) {
-        await document.exitFullscreen();
-      } else if (musicVideo.requestFullscreen) {
-        await musicVideo.requestFullscreen();
-      } else if (musicVideo.webkitEnterFullscreen) {
-        musicVideo.webkitEnterFullscreen();
-      }
-    } catch (error) {
-      // The browser can reject fullscreen requests outside a direct user gesture.
-    }
-  });
 }

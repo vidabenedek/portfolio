@@ -39,7 +39,7 @@
   <link rel="preload" as="image" href="../optimized/hero-background-1200.jpg" fetchpriority="high">
   <link rel="preload" as="font" href="../fonts/league-spartan-latin.woff2" type="font/woff2" crossorigin>
   <link rel="preload" as="font" href="../fonts/league-spartan-latin-ext.woff2" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../styles.css?v=20261112-seo-performance">
+  <link rel="stylesheet" href="../styles.css?v=20261116-video-controls">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -109,13 +109,14 @@
           <h1 id="showreel-page-title">VIDA BENEDEK — DIRECTOR SHOWREEL 2025</h1>
         </div>
 
-        <div class="watch-page-video">
+        <div class="watch-page-video video-player" data-video-player>
           <video
             controls
             playsinline
-            preload="none"
+            preload="metadata"
             poster="../optimized/hero-background-1200.jpg"
             aria-label="Play Vida Benedek Director Showreel 2025"
+            data-video-controls
           >
             <source src="../VIDA_BENEDEK_SHOWREEL_2025.mp4" type="video/mp4">
             Your browser does not support HTML5 video.
@@ -136,6 +137,6 @@
       </section>
     </main>
   </div>
-  <script src="../script.js?v=20261112-seo-performance-v2"></script>
+  <script src="../script.js?v=20261116-video-controls"></script>
 </body>
 </html>
