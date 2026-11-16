@@ -1263,7 +1263,7 @@ h2,
 
 .official-selection-gallery {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(10, minmax(0, 1fr));
   gap: clamp(8px, 1.2vw, 14px);
 }
 
@@ -1391,6 +1391,10 @@ h2,
 
   .featured-visual {
     min-height: 320px;
+  }
+
+  .official-selection-gallery {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
 }
@@ -1740,7 +1744,7 @@ h2,
   }
 
   .official-selection-gallery {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 8px;
   }
 
