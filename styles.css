@@ -1245,6 +1245,33 @@ h2,
   align-items: center;
 }
 
+.work-card-title-row-multiple {
+  grid-template-columns: minmax(0, 1fr) clamp(150px, 16vw, 210px);
+}
+
+.official-selection-marks {
+  display: grid;
+  gap: 10px;
+  align-content: center;
+}
+
+.work-card-festival-wall {
+  grid-column: 1 / -1;
+  min-height: 0;
+  gap: 22px;
+}
+
+.official-selection-gallery {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(8px, 1.2vw, 14px);
+}
+
+.official-selection-gallery .official-selection-mark {
+  width: 100%;
+  opacity: 0.88;
+}
+
 .official-selection-mark {
   display: block;
   width: 100%;
@@ -1257,6 +1284,17 @@ h2,
 
 .work-card-awarded:hover .official-selection-mark,
 .work-card-awarded.is-blob-tracked .official-selection-mark {
+  opacity: 1;
+  transform: scale(1.025);
+}
+
+.work-card-festival-wall:hover .official-selection-mark,
+.work-card-festival-wall.is-blob-tracked .official-selection-mark {
+  opacity: 0.88;
+  transform: none;
+}
+
+.work-card-festival-wall .official-selection-mark:hover {
   opacity: 1;
   transform: scale(1.025);
 }
@@ -1690,6 +1728,20 @@ h2,
   .work-card-title-row {
     grid-template-columns: minmax(0, 1fr) clamp(104px, 31vw, 142px);
     gap: 14px;
+  }
+
+  .work-card-title-row-multiple {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .official-selection-marks {
+    grid-template-columns: repeat(2, minmax(0, 142px));
+  }
+
+  .official-selection-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
   }
 
   .watch-page {
