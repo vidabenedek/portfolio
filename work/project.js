@@ -1,4 +1,24 @@
 const projects = {
+  "jo-a-vege": {
+    artist: "Szlimmy",
+    title: "JÓ A VÉGE",
+    year: "2026",
+    youtube: "https://www.youtube.com/watch?v=czAg9J831QY",
+    youtubeId: "czAg9J831QY",
+    next: ["sun", "SUN"],
+    credits: [
+      ["Director", "Vida Benedek"], ["DOP", "Kirchknopf Mátyás"],
+      ["Creative Producer", "Turjányi Lilla"], ["Production Designer", "Susla Luca"],
+      ["Set Constructor", "Susla László"], ["Stylist", "Jeli Csenge"],
+      ["Set Dresser", "Plumpton Emma"], ["Makeup & Hairstyle", "Székely Dóra"],
+      ["Wearing Pieces", "THEFOUR / Hatsuka Vintage / Nora Keresztes / d'Alma Jewelry"],
+      ["Editor", "Kovács Dávid"], ["Colorist", "Felleg Noé"],
+      ["Graphic Design", "Kosztán Kamilla"], ["Photographer", "Qian Péter"],
+      ["Location", "Nans Studio"], ["Production Company", "ODESA Films"],
+      ["Music / Master", "Somody Áron"], ["Lyrics", "Pusztai Balázs"],
+      ["Producer", "SOMODY"], ["Special Thanks", "Brucksner's Antikvitás"],
+    ],
+  },
   sun: {
     artist: "boebeck",
     title: "SUN",
@@ -150,7 +170,7 @@ const projects = {
     year: "2023",
     youtube: "https://www.youtube.com/watch?v=yd0roFBKNnw",
     youtubeId: "yd0roFBKNnw",
-    next: ["sun", "SUN"],
+    next: ["jo-a-vege", "JÓ A VÉGE"],
     credits: [
       ["Director", "Vida Benedek"], ["DOP", "Kirchknopf Mátyás"],
       ["Actor", "Reiter Zita"], ["Editor", "Kovács Dávid"],

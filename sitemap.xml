@@ -6,7 +6,7 @@
 >
   <url>
     <loc>https://vidabenedek.com/</loc>
-    <lastmod>2026-11-12</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <image:image>
       <image:loc>https://vidabenedek.com/optimized/hero-background-1200.jpg</image:loc>
     </image:image>
@@ -15,6 +15,9 @@
     </image:image>
     <image:image>
       <image:loc>https://vidabenedek.com/optimized/boebeck-sun-youtube.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://vidabenedek.com/optimized/szlimmy-jo-a-vege-youtube.jpg</image:loc>
     </image:image>
     <image:image>
       <image:loc>https://vidabenedek.com/optimized/videoclip-001-1280.jpg</image:loc>
@@ -37,6 +40,7 @@
     </image:image>
     <video:video><video:thumbnail_loc>https://vidabenedek.com/optimized/hero-background-1200.jpg</video:thumbnail_loc><video:title>Vida Benedek Director Showreel 2025</video:title><video:description>Selected directing work across commercials, music videos, short films and visual concepts.</video:description><video:content_loc>https://vidabenedek.com/VIDA_BENEDEK_SHOWREEL_2025.mp4</video:content_loc><video:publication_date>2026-04-24T13:52:10+02:00</video:publication_date></video:video>
   </url>
+  <url><loc>https://vidabenedek.com/work/jo-a-vege/</loc><lastmod>2026-11-20</lastmod><video:video><video:thumbnail_loc>https://vidabenedek.com/optimized/szlimmy-jo-a-vege-youtube.jpg</video:thumbnail_loc><video:title>Szlimmy – JÓ A VÉGE</video:title><video:description>Official music video directed by Vida Benedek.</video:description><video:player_loc>https://www.youtube.com/embed/czAg9J831QY</video:player_loc><video:publication_date>2026-11-19T08:00:06-08:00</video:publication_date></video:video></url>
   <url><loc>https://vidabenedek.com/work/sun/</loc><lastmod>2026-11-12</lastmod><video:video><video:thumbnail_loc>https://vidabenedek.com/optimized/boebeck-sun-youtube.jpg</video:thumbnail_loc><video:title>boebeck – SUN</video:title><video:description>Official music video directed by Vida Benedek.</video:description><video:player_loc>https://www.youtube.com/embed/qw8giVFSmjE</video:player_loc><video:publication_date>2026-11-12T09:00:07-08:00</video:publication_date></video:video></url>
   <url><loc>https://vidabenedek.com/work/ki-be/</loc><lastmod>2026-11-12</lastmod><video:video><video:thumbnail_loc>https://vidabenedek.com/optimized/czeglady-milan-hodovan-ki-be-youtube.jpg</video:thumbnail_loc><video:title>Czeglady x Milan Hodovan – KI BE</video:title><video:description>Official music video directed by Vida Benedek.</video:description><video:player_loc>https://www.youtube.com/embed/HJwIDaARL5k</video:player_loc><video:publication_date>2026-11-05T06:00:08-08:00</video:publication_date></video:video></url>
   <url><loc>https://vidabenedek.com/work/tiszta/</loc><lastmod>2026-11-12</lastmod><video:video><video:thumbnail_loc>https://vidabenedek.com/optimized/czeglady-sosehol-tiszta-youtube.jpg</video:thumbnail_loc><video:title>Czeglady x sosehol – TISZTA</video:title><video:description>Official music video directed by Vida Benedek.</video:description><video:player_loc>https://www.youtube.com/embed/M6TgqOht1_U</video:player_loc><video:publication_date>2026-09-04T03:00:06-07:00</video:publication_date></video:video></url>
