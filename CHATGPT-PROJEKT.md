@@ -182,7 +182,6 @@ Az egyes fájlok tartalma a `<PROJECT_FILE path="...">` jelölések között tal
             "@id": "https://vidabenedek.com/#primary-image"
           },
           "email": "mailto:dir.vidab@gmail.com",
-          "telephone": "+36306549109",
           "sameAs": [
             "https://www.instagram.com/vidabenedek"
           ],
@@ -581,13 +580,11 @@ Az egyes fájlok tartalma a `<PROJECT_FILE path="...">` jelölések között tal
 
         <div class="contact-grid">
           <div>
-            <p class="contact-line">+36 30 654 9109</p>
             <p class="contact-line">DIR.VIDAB@GMAIL.COM</p>
           </div>
 
           <div class="contact-links">
             <a href="mailto:dir.vidab@gmail.com">EMAIL</a>
-            <a href="tel:+36306549109">PHONE</a>
             <a
               href="https://www.instagram.com/vidabenedek/"
               target="_blank"
