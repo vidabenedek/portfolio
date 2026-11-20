@@ -46,7 +46,7 @@
   <link rel="preload" as="image" href="optimized/hero-background-1200.jpg" fetchpriority="high">
   <link rel="preload" as="font" href="fonts/league-spartan-latin.woff2" type="font/woff2" crossorigin>
   <link rel="preload" as="font" href="fonts/league-spartan-latin-ext.woff2" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=20261116-video-controls">
+  <link rel="stylesheet" href="styles.css?v=20261120-mobile-typography-scale">
   <noscript>
     <style>
       .panel { opacity: 1; transform: none; }
@@ -188,27 +188,6 @@
   <canvas class="blob-tracker" data-blob-tracker aria-hidden="true"></canvas>
 
   <div class="page-shell">
-    <header class="site-header">
-      <a class="site-mark" href="#top">VIDA BENEDEK</a>
-
-      <button class="menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="site-nav">
-        <span class="menu-toggle-lines" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-        <span class="menu-toggle-label">MENU</span>
-      </button>
-
-      <nav class="site-nav" id="site-nav" aria-label="Main navigation">
-        <a href="#about">ABOUT</a>
-        <a href="#work">WORK</a>
-        <a href="#showreel">SHOWREEL</a>
-        <a href="#experience">EXPERIENCE</a>
-        <a href="#contact">CONTACT</a>
-      </nav>
-    </header>
-
     <main id="top">
       <section class="hero panel panel-visible">
         <div class="hero-media" aria-hidden="true">
@@ -272,7 +251,7 @@
       <section id="work" class="content-section panel">
         <div class="section-heading">
           <p class="section-index">02</p>
-          <h2>SELECTED WORK</h2>
+          <h2>WORKS</h2>
         </div>
 
         <div class="work-groups">
@@ -526,12 +505,12 @@
 
           </article>
 
-          <article class="work-group">
+          <article id="commercials" class="work-group">
             <header class="group-heading">
               <h3>COMMERCIALS</h3>
             </header>
 
-            <div class="work-cards">
+            <div class="work-cards commercials-grid">
               <article class="work-card">
                 <span class="work-year">2025</span>
                 <h4>VELUX</h4>
@@ -633,6 +612,241 @@
                 <p>SHORT FILM</p>
               </article>
             </div>
+
+            <aside id="press" class="press-archive" aria-labelledby="press-archive-title" data-press-carousel>
+              <header class="press-archive-head">
+                <div>
+                  <h4 id="press-archive-title">IN THE PRESS</h4>
+                </div>
+                <p class="press-intro">INTERVIEWS, PREMIERES AND FESTIVAL COVERAGE FEATURING VIDA BENEDEK.</p>
+              </header>
+
+              <div class="press-carousel-shell">
+                <div
+                  class="press-track"
+                  tabindex="0"
+                  role="region"
+                  aria-label="Press articles, newest first"
+                  data-press-track
+                >
+                  <article class="press-card press-card-featured" data-press-card>
+                    <a href="https://rockstar.hu/zene/kieges-es-trainspottin-hangulat-szlimmy-uj-dalaban/" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">ROCKSTAR</span>
+                      <time datetime="2026-11-19">19.11.2026</time>
+                      <h5>KIÉGÉS ÉS TRAINSPOTTING-HANGULAT SZLIMMY ÚJ DALÁBAN</h5>
+                      <span class="press-topic">SZLIMMY / JÓ A VÉGE</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card" data-press-card>
+                    <a href="https://refresher.hu/14147-premier-esoben-neonban-forgott-czeglady-es-hodovan-milan-ki-be-cimu-klipje" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">REFRESHER</span>
+                      <time datetime="2026-11-05">05.11.2026</time>
+                      <h5>PREMIER: ESŐBEN, NEONBAN FORGOTT CZEGLADY ÉS HODOVÁN MILÁN KI BE CÍMŰ KLIPJE</h5>
+                      <span class="press-topic">CZEGLADY × HODOVÁN MILÁN</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card" data-press-card>
+                    <a href="https://www.bside.hu/l/a-folyamatos-megfelelesi-kenyszert-dolgozza-fel-ujdonsagaban-czeglady/" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">BSIDE</span>
+                      <time datetime="2026-11-05">05.11.2026</time>
+                      <h5>A FOLYAMATOS MEGFELELÉSI KÉNYSZERT DOLGOZZA FEL ÚJDONSÁGÁBAN CZEGLADY</h5>
+                      <span class="press-topic">CZEGLADY × HODOVÁN MILÁN</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card press-card-award" data-press-card>
+                    <a href="https://kreativ.hu/cikk/kiosztottak-a-10-magyar-klipszemle-dijait" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">KREATÍV</span>
+                      <time datetime="2026-11-04">04.11.2026</time>
+                      <h5>KIOSZTOTTÁK A 10. MAGYAR KLIPSZEMLE DÍJAIT</h5>
+                      <span class="press-topic">MAGYAR KLIPSZEMLE / AWARDS</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card press-card-award" data-press-card>
+                    <a href="https://keretblog.hu/beton-hofie-lett-az-ev-klipje-kiosztottak-a-10-magyar-klipszemle-dijait/" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">KERET</span>
+                      <time datetime="2026-10-31">31.10.2026</time>
+                      <h5>BETON.HOFIÉ LETT AZ ÉV KLIPJE – KIOSZTOTTÁK A 10. MAGYAR KLIPSZEMLE DÍJAIT</h5>
+                      <span class="press-topic">MAGYAR KLIPSZEMLE / AWARDS</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card press-card-award" data-press-card>
+                    <a href="https://telex.hu/after/2026/10/30/tizedik-klipszemle-beton-hofie-lett-az-ev-legjobb-klipje-pogany-indulot-is-dijaztak" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">TELEX AFTER</span>
+                      <time datetime="2026-10-30">30.10.2026</time>
+                      <h5>A TARR BÉLA NEVÉT VISELŐ SZÁM TÜNTETÉSES VIDEÓJA VITTE EL A FŐDÍJAT</h5>
+                      <span class="press-topic">MAGYAR KLIPSZEMLE / AWARDS</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card press-card-award" data-press-card>
+                    <a href="https://magyar.film.hu/filmhu/hir/betonhofi-tarr-bela-cimu-klipje-vitte-el-a-fodijat-a-10-magyar-klipszemlen" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">FILMHU</span>
+                      <time datetime="2026-10-30">30.10.2026</time>
+                      <h5>BETON.HOFI TARR BÉLA CÍMŰ KLIPJE VITTE EL A FŐDÍJAT A 10. MAGYAR KLIPSZEMLÉN</h5>
+                      <span class="press-topic">MAGYAR KLIPSZEMLE / AWARDS</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card press-card-award" data-press-card>
+                    <a href="https://refresher.hu/14067-beton-hofi-tarr-bela-cimu-klipje-lett-a-10-magyar-klipszemle-legjobbja" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">REFRESHER</span>
+                      <time datetime="2026-10-29">29.10.2026</time>
+                      <h5>BETON.HOFI TARR BÉLA CÍMŰ KLIPJE LETT A 10. MAGYAR KLIPSZEMLE LEGJOBBJA</h5>
+                      <span class="press-topic">MAGYAR KLIPSZEMLE / AWARDS</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card" data-press-card>
+                    <a href="https://recorder.blog.hu/2026/09/04/tiszta_sor_mindig_en_dontottem_ugy_hogy_belemegyek_czeglady_tiszta_klippremier" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">RECORDER</span>
+                      <time datetime="2026-09-04">04.09.2026</time>
+                      <h5>„TISZTA SOR, MINDIG ÉN DÖNTÖTTEM ÚGY, HOGY BELEMEGYEK” – CZEGLADY-KLIPPREMIER</h5>
+                      <span class="press-topic">CZEGLADY / TISZTA</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card" data-press-card>
+                    <a href="https://langolo.hu/lenkke_-sziven-utnek-a-melyek/" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">LÁNGOLÓ</span>
+                      <time datetime="2026-06-16">16.06.2026</time>
+                      <h5>LENKKE_ – SZÍVEN ÜTNEK A MÉLYEK</h5>
+                      <span class="press-topic">LENKKE_ / VIDEO PREMIERE</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card" data-press-card>
+                    <a href="https://recorder.blog.hu/2026/06/12/sziven_utnek_a_melyek_lenkke_uj_klipje_azt_tancolja_korul_hogyan_hoz_ossze_minket_az_elektronika" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">RECORDER</span>
+                      <time datetime="2026-06-12">12.06.2026</time>
+                      <h5>SZÍVEN ÜTNEK A MÉLYEK – LENKKE_ ÚJ KLIPJE AZT TÁNCOLJA KÖRÜL, HOGYAN HOZ ÖSSZE MINKET AZ ELEKTRONIKA</h5>
+                      <span class="press-topic">LENKKE_ / VIDEO PREMIERE</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card" data-press-card>
+                    <a href="https://keretblog.hu/sziven-utnek-a-melyek-lenkke_-uj-dalaban/" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">KERET</span>
+                      <time datetime="2026-06-12">12.06.2026</time>
+                      <h5>SZÍVEN ÜTNEK A MÉLYEK LENKKE_ ÚJ DALÁBAN</h5>
+                      <span class="press-topic">LENKKE_ / VIDEO PREMIERE</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card" data-press-card>
+                    <a href="https://phenom.hu/szlimmy-egyszerre-simogat-es-elgondolkodtat-az-elet-kerdeseirol-itt-a-varazslo/" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">PHENOM</span>
+                      <time datetime="2026-03-13">13.03.2026</time>
+                      <h5>SZLIMMY EGYSZERRE SIMOGAT ÉS ELGONDOLKODTAT AZ ÉLET KÉRDÉSEIRŐL – ITT A „VARÁZSLÓ!”</h5>
+                      <span class="press-topic">SZLIMMY / VARÁZSLÓ</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card" data-press-card>
+                    <a href="https://langolo.hu/szlimmy-nem-is-te-lennel/" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">LÁNGOLÓ</span>
+                      <time datetime="2026-02-03">03.02.2026</time>
+                      <h5>SZLIMMY – NEM IS TE LENNÉL</h5>
+                      <span class="press-topic">SZLIMMY / VIDEO PREMIERE</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card" data-press-card>
+                    <a href="https://magneoton.hu/escape-plan-recordings/hu/hirek/szlimmy-nem-is-te-lennel" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">MAGNEOTON</span>
+                      <time datetime="2026-01-30">30.01.2026</time>
+                      <h5>SZLIMMY – NEM IS TE LENNÉL</h5>
+                      <span class="press-topic">ESCAPE PLAN RECORDINGS</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card" data-press-card>
+                    <a href="https://refresher.hu/11392-PREMIER-Szlimmy-ultralatvanyos-klippel-inditja-az-evet-itt-a-Nem-is-te-lennel" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">REFRESHER</span>
+                      <time datetime="2026-01-29">29.01.2026</time>
+                      <h5>PREMIER: SZLIMMY ULTRALÁTVÁNYOS KLIPPEL INDÍTJA AZ ÉVET</h5>
+                      <span class="press-topic">SZLIMMY / NEM IS TE LENNÉL</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card" data-press-card>
+                    <a href="https://refresher.hu/10258-KLIPPREMIER-Hany-arca-letezhet-a-szorongasnak-Ebbol-a-gondolatbol-szuletett-meg-Czeglady-Otvar-Pestis-es-Karyuu-kollabja" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">REFRESHER</span>
+                      <time datetime="2025-10-03">03.10.2025</time>
+                      <h5>KLIPPREMIER: HÁNY ARCA LÉTEZHET A SZORONGÁSNAK?</h5>
+                      <span class="press-topic">CZEGLADY × ÓTVAR PESTIS × KARYUU</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card" data-press-card>
+                    <a href="https://filmtett.ro/cikk/friss-hus-2024-magyar-filmek-beszamolo" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">FILMTETT</span>
+                      <time datetime="2024-06-04">04.06.2024</time>
+                      <h5>MAGYAR RÖVIDEK A NAPRENDSZER KÖZEPÉN</h5>
+                      <span class="press-topic">FRISS HÚS 2024 / SZÁRNYASOK</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card" data-press-card>
+                    <a href="https://www.koncert.hu/hirek/klippremier/maluride--szeressetek-a-feltorekvo-dream-pop-formaciot-12502" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">KONCERT.HU</span>
+                      <time datetime="2023-06-01">01.06.2023</time>
+                      <h5>MALURIDÉ: SZERESSÉTEK A FELTÖREKVŐ DREAM-POP FORMÁCIÓT!</h5>
+                      <span class="press-topic">MALURIDÉ / SHADOWS</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card" data-press-card>
+                    <a href="https://recorder.blog.hu/2023/05/29/magyarradar_es_klippremier_maluride_shadows" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">RECORDER</span>
+                      <time datetime="2023-05-29">29.05.2023</time>
+                      <h5>„EZT SZERETEM A LEGJOBBAN ÉNEKELNI KONCERTEKEN” – MAGYARRADAR ÉS KLIPPREMIER</h5>
+                      <span class="press-topic">MALURIDÉ / SHADOWS</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+
+                  <article class="press-card press-card-interview" data-press-card>
+                    <a href="https://marieclaire.hu/kultura/2022/10/24/a-ferfi-aki-bejon-nekunk-vida-benedek/" target="_blank" rel="noopener noreferrer">
+                      <span class="press-source">MARIE CLAIRE</span>
+                      <time datetime="2022-10-24">24.10.2022</time>
+                      <h5>A FÉRFI, AKI BEJÖN NEKÜNK: VIDA BENEDEK, A BERLINBEN DÍJAZOTT FELTÖREKVŐ RENDEZŐ</h5>
+                      <span class="press-topic">INTERVIEW / PORTRAIT</span>
+                      <span class="press-link-label">READ ARTICLE</span>
+                    </a>
+                  </article>
+                </div>
+
+                <div class="press-carousel-footer">
+                  <div class="press-progress" aria-hidden="true"><span data-press-progress></span></div>
+                  <p class="press-count" aria-live="polite"><span data-press-current>01</span> / <span>21</span></p>
+                </div>
+                <p class="press-gesture">DRAG / SWIPE TO EXPLORE</p>
+              </div>
+            </aside>
           </article>
         </div>
       </section>
@@ -728,6 +942,6 @@
     </main>
   </div>
 
-  <script src="script.js?v=20261116-video-controls"></script>
+  <script src="script.js?v=20261120-mobile-press"></script>
 </body>
 </html>

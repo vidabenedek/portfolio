@@ -49,6 +49,7 @@ function initBlobTracker() {
     ".timeline-card",
     ".videoclip-shot",
     ".clip-frame",
+    ".press-card",
   ].join(",");
 
   const pointer = {
@@ -1054,6 +1055,141 @@ function initVideoControls(video) {
 }
 
 controlledVideos.forEach(initVideoControls);
+
+function initPressCarousel(carousel) {
+  const track = carousel.querySelector("[data-press-track]");
+  const cards = Array.from(carousel.querySelectorAll("[data-press-card]"));
+  const currentLabel = carousel.querySelector("[data-press-current]");
+  const progress = carousel.querySelector("[data-press-progress]");
+
+  if (!track || !cards.length) return;
+
+  let activeIndex = 0;
+  let scrollFrame = 0;
+  let dragStartX = 0;
+  let dragStartScroll = 0;
+  let dragDistance = 0;
+  let isDragging = false;
+  let isTouchTracking = false;
+
+  function getClosestCardIndex() {
+    const trackLeft = track.getBoundingClientRect().left;
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+
+    cards.forEach((card, index) => {
+      const distance = Math.abs(card.getBoundingClientRect().left - trackLeft);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    return closestIndex;
+  }
+
+  function updateCarousel(index = getClosestCardIndex()) {
+    activeIndex = Math.max(0, Math.min(cards.length - 1, index));
+    cards.forEach((card, cardIndex) => {
+      card.classList.toggle("is-active", cardIndex === activeIndex);
+    });
+
+    if (currentLabel) currentLabel.textContent = String(activeIndex + 1).padStart(2, "0");
+    if (progress) progress.style.transform = `scaleX(${(activeIndex + 1) / cards.length})`;
+  }
+
+  function showCard(index) {
+    const nextIndex = Math.max(0, Math.min(cards.length - 1, index));
+    cards[nextIndex].scrollIntoView({
+      behavior: reducedMotionQuery.matches ? "auto" : "smooth",
+      block: "nearest",
+      inline: "start",
+    });
+    updateCarousel(nextIndex);
+  }
+
+  track.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    showCard(activeIndex + (event.key === "ArrowRight" ? 1 : -1));
+  });
+
+  track.addEventListener("scroll", () => {
+    window.cancelAnimationFrame(scrollFrame);
+    scrollFrame = window.requestAnimationFrame(() => updateCarousel());
+  }, { passive: true });
+
+  track.addEventListener("pointerdown", (event) => {
+    if (event.pointerType !== "mouse") {
+      isTouchTracking = true;
+      dragStartX = event.clientX;
+      dragDistance = 0;
+      return;
+    }
+
+    if (event.button !== 0) return;
+    isDragging = true;
+    dragStartX = event.clientX;
+    dragStartScroll = track.scrollLeft;
+    dragDistance = 0;
+    track.classList.add("is-dragging");
+    track.setPointerCapture(event.pointerId);
+  });
+
+  track.addEventListener("pointermove", (event) => {
+    if (isTouchTracking) {
+      dragDistance = event.clientX - dragStartX;
+      return;
+    }
+
+    if (!isDragging) return;
+    dragDistance = event.clientX - dragStartX;
+    track.scrollLeft = dragStartScroll - dragDistance;
+  });
+
+  function finishDrag(event) {
+    if (isTouchTracking) {
+      isTouchTracking = false;
+      return;
+    }
+
+    if (!isDragging) return;
+    isDragging = false;
+    track.classList.remove("is-dragging");
+    if (track.hasPointerCapture(event.pointerId)) track.releasePointerCapture(event.pointerId);
+    showCard(getClosestCardIndex());
+  }
+
+  track.addEventListener("pointerup", finishDrag);
+  track.addEventListener("pointercancel", (event) => {
+    isTouchTracking = false;
+    dragDistance = 0;
+    finishDrag(event);
+  });
+  track.addEventListener("click", (event) => {
+    const link = event.target.closest(".press-card a");
+    const wasDragged = Math.abs(dragDistance) > 8;
+
+    if (wasDragged) {
+      event.preventDefault();
+    } else if (
+      link &&
+      !event.metaKey &&
+      !event.ctrlKey &&
+      !event.shiftKey &&
+      !event.altKey
+    ) {
+      event.preventDefault();
+      window.location.assign(link.href);
+    }
+
+    dragDistance = 0;
+  }, true);
+
+  updateCarousel(0);
+}
+
+document.querySelectorAll("[data-press-carousel]").forEach(initPressCarousel);
 
 function canAutoplayVideo(video) {
   const isDesktopOnly = video.dataset.videoAutoplay === "desktop";
