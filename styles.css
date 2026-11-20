@@ -1362,21 +1362,6 @@ h2,
   border-top: 1px solid var(--line-strong);
 }
 
-.press-archive::before {
-  content: "PRESS";
-  position: absolute;
-  top: -0.08em;
-  right: -0.02em;
-  z-index: -1;
-  color: transparent;
-  font-size: clamp(5rem, 15vw, 14rem);
-  font-weight: 700;
-  line-height: 0.72;
-  letter-spacing: -0.08em;
-  -webkit-text-stroke: 1px rgba(253, 28, 3, 0.11);
-  pointer-events: none;
-}
-
 .press-archive-head {
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
@@ -1414,6 +1399,8 @@ h2,
 
 .press-carousel-shell {
   position: relative;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .press-track {
@@ -1423,9 +1410,11 @@ h2,
   gap: var(--press-gap);
   padding: 6px max(1px, calc((100vw - min(100vw - 48px, var(--max-width))) / 2)) 24px 1px;
   overflow-x: auto;
+  max-width: 100%;
   overscroll-behavior-inline: contain;
+  overscroll-behavior-x: contain;
   scroll-behavior: smooth;
-  scroll-snap-type: inline mandatory;
+  scroll-snap-type: x mandatory;
   scrollbar-width: none;
   cursor: grab;
   touch-action: pan-x pan-y;
@@ -2137,6 +2126,7 @@ h2,
   }
 
   .press-track {
+    width: 100%;
     grid-auto-columns: 88%;
     gap: 12px;
     padding: 4px 10px 16px 0;
@@ -2145,6 +2135,8 @@ h2,
   }
 
   .press-card {
+    width: 100%;
+    max-width: 100%;
     height: clamp(350px, 106vw, 380px);
     min-height: 0;
   }

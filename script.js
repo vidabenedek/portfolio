@@ -1132,8 +1132,6 @@ function initPressCarousel(carousel) {
     dragStartX = event.clientX;
     dragStartScroll = track.scrollLeft;
     dragDistance = 0;
-    track.classList.add("is-dragging");
-    track.setPointerCapture(event.pointerId);
   });
 
   track.addEventListener("pointermove", (event) => {
@@ -1144,6 +1142,13 @@ function initPressCarousel(carousel) {
 
     if (!isDragging) return;
     dragDistance = event.clientX - dragStartX;
+
+    if (Math.abs(dragDistance) > 6 && !track.classList.contains("is-dragging")) {
+      track.classList.add("is-dragging");
+      track.setPointerCapture(event.pointerId);
+    }
+
+    if (!track.classList.contains("is-dragging")) return;
     track.scrollLeft = dragStartScroll - dragDistance;
   });
 
@@ -1154,10 +1159,15 @@ function initPressCarousel(carousel) {
     }
 
     if (!isDragging) return;
+    const wasDragged = Math.abs(dragDistance) > 8;
     isDragging = false;
     track.classList.remove("is-dragging");
     if (track.hasPointerCapture(event.pointerId)) track.releasePointerCapture(event.pointerId);
-    showCard(getClosestCardIndex());
+    if (wasDragged) {
+      showCard(getClosestCardIndex());
+    } else {
+      dragDistance = 0;
+    }
   }
 
   track.addEventListener("pointerup", finishDrag);
@@ -1167,20 +1177,11 @@ function initPressCarousel(carousel) {
     finishDrag(event);
   });
   track.addEventListener("click", (event) => {
-    const link = event.target.closest(".press-card a");
     const wasDragged = Math.abs(dragDistance) > 8;
 
     if (wasDragged) {
       event.preventDefault();
-    } else if (
-      link &&
-      !event.metaKey &&
-      !event.ctrlKey &&
-      !event.shiftKey &&
-      !event.altKey
-    ) {
-      event.preventDefault();
-      window.location.assign(link.href);
+      event.stopPropagation();
     }
 
     dragDistance = 0;
