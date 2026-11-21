@@ -619,11 +619,14 @@ initBlobTracker();
 function initScrollTextDecode() {
   if (
     reducedMotionQuery.matches ||
-    mobilePointerQuery.matches ||
     !("IntersectionObserver" in window)
   ) {
     return;
   }
+
+  const decodeTargets = mobilePointerQuery.matches
+    ? document.querySelectorAll(".hero h1 [data-hero-decode]")
+    : document.querySelectorAll("[data-hero-decode]");
 
   const scrambleCharacters = "!<>-_\\/[]{}=+*^?#";
 
@@ -715,7 +718,7 @@ function initScrollTextDecode() {
     { threshold: 0.15 }
   );
 
-  document.querySelectorAll("[data-hero-decode]").forEach((element) => {
+  decodeTargets.forEach((element) => {
     if (element.children.length) {
       return;
     }
